@@ -19,6 +19,12 @@ public class MenuScreen extends BaseScreen {
     private Vector2 pos;
     private float topBorder;
     private float rightBorder;
+    private float downBorder;
+    private float leftBorder;
+
+
+    private float goalX;
+    private float goalY;
 
     @Override
     public void show() {
@@ -28,8 +34,8 @@ public class MenuScreen extends BaseScreen {
         ship = new Texture("ship.png");
 
         touch = new Vector2();
-        v = new Vector2(0.7f,0.7f);
-        pos = new Vector2();
+        v = new Vector2(0,0);
+        pos = new Vector2(150 - ship.getWidth()/2, 150 - ship.getHeight()/2);
     }
 
     @Override
@@ -37,19 +43,27 @@ public class MenuScreen extends BaseScreen {
         super.render(delta);
         Gdx.gl.glClearColor(0.4f, 0.3f, 0.9f, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
         batch.begin();
         batch.draw(img, 0 , 0);
         batch.draw(ship, pos.x, pos.y);
         batch.end();
-        topBorder = pos.x + ship.getWidth();
-        rightBorder = pos.y + ship.getHeight();
-        if (topBorder < Gdx.graphics.getWidth()
-                && rightBorder < Gdx.graphics.getHeight()) {
-            pos.add(v);
-        } else {
-            v.set(-0.7f, -0.7f);
-            pos.add(v);
-        }
+
+        rightBorder = pos.x + ship.getWidth();
+        topBorder = pos.y + ship.getHeight();
+        leftBorder = pos.x;
+        downBorder = pos.y;
+
+        pos.add(v);
+
+        if((Math.abs(pos.x - goalX) < 1) && (Math.abs(pos.y - goalY) < 1)) v.set(0,0);
+
+        if(pos.x <= 0) pos.x = 0;
+        if(pos.x >= Gdx.graphics.getWidth() - ship.getWidth()) pos.x = Gdx.graphics.getWidth() - ship.getWidth();
+
+        if(pos.y <= 0) pos.y = 0;
+        if(pos.y >= Gdx.graphics.getHeight() - ship.getHeight()) pos.y = Gdx.graphics.getHeight() - ship.getHeight();
+
     }
 
     @Override
@@ -64,7 +78,36 @@ public class MenuScreen extends BaseScreen {
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         super.touchDown(screenX, screenY, pointer, button);
         touch.set(screenX, Gdx.graphics.getHeight() - screenY);
-        System.out.println("touch.x = " + touch.x + " touch.y = " + touch.y);
+        goalX = touch.x - ship.getWidth()/2;
+        goalY = touch.y - ship.getHeight()/2;;
+
+        if(goalX < 0) goalX = 0;
+        if(goalX > (Gdx.graphics.getWidth() - ship.getWidth())) goalX = Gdx.graphics.getWidth() - ship.getWidth();
+
+        if(goalY < 0) goalY = 0;
+        if(goalY > (Gdx.graphics.getHeight() - ship.getHeight())) goalY = Gdx.graphics.getHeight() - ship.getHeight();
+
+        System.out.println("X = " + goalX + ", Y = " + goalY);
+
+        v.set((goalX - pos.x)/120, (goalY - pos.y)/120);
+        return false;
+    }
+
+    @Override
+    public boolean keyDown(int keycode) {
+        if(keycode == 19) v.set(0, 10);
+        if(keycode == 20) v.set(0, -10);
+        if(keycode == 21) v.set(-10, 0);
+        if(keycode == 22) v.set(10, 0);
+        return false;
+    }
+
+    @Override
+    public boolean keyUp(int keycode) {
+        if(keycode == 19) v.set(0, 0);
+        if(keycode == 20) v.set(0, 0);
+        if(keycode == 21) v.set(0, 0);
+        if(keycode == 22) v.set(0, 0);
         return false;
     }
 
