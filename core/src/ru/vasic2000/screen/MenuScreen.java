@@ -17,6 +17,7 @@ public class MenuScreen extends BaseScreen {
     private Vector2 touch;
     private Vector2 v;
     private Vector2 pos;
+    private Vector2 go;
     private float topBorder;
     private float rightBorder;
     private float downBorder;
@@ -36,6 +37,7 @@ public class MenuScreen extends BaseScreen {
         touch = new Vector2();
         v = new Vector2(0,0);
         pos = new Vector2(150 - ship.getWidth()/2, 150 - ship.getHeight()/2);
+        go = pos;
     }
 
     @Override
@@ -56,7 +58,10 @@ public class MenuScreen extends BaseScreen {
 
         pos.add(v);
 
-        if((Math.abs(pos.x - goalX) < 1) && (Math.abs(pos.y - goalY) < 1)) v.set(0,0);
+        if((Math.abs(pos.x - goalX) < 2) && (Math.abs(pos.y - goalY) < 2)) {
+            v.set(0,0);
+            pos.set(goalX, goalY);
+        }
 
         if(pos.x <= 0) pos.x = 0;
         if(pos.x >= Gdx.graphics.getWidth() - ship.getWidth()) pos.x = Gdx.graphics.getWidth() - ship.getWidth();
@@ -87,27 +92,44 @@ public class MenuScreen extends BaseScreen {
         if(goalY < 0) goalY = 0;
         if(goalY > (Gdx.graphics.getHeight() - ship.getHeight())) goalY = Gdx.graphics.getHeight() - ship.getHeight();
 
+//      Псевдоускорение, чтобы кораблик перемещался ~ за одно и то же время в зависимости от расстояния
         System.out.println("X = " + goalX + ", Y = " + goalY);
-
-        v.set((goalX - pos.x)/120, (goalY - pos.y)/120);
+        if ((Math.abs(goalX - pos.x) + Math.abs(goalY - pos.y)) < 50)
+            v.set((goalX - pos.x) / 69, (goalY - pos.y) / 69);
+        else if ((Math.abs(goalX - pos.x) + Math.abs(goalY - pos.y)) < 100)
+            v.set((goalX - pos.x) / 67, (goalY - pos.y) / 67);
+        else if ((Math.abs(goalX - pos.x) + Math.abs(goalY - pos.y)) < 150)
+            v.set((goalX - pos.x) / 63, (goalY - pos.y) / 63);
+        else if ((Math.abs(goalX - pos.x) + Math.abs(goalY - pos.y)) < 200)
+            v.set((goalX - pos.x) / 60, (goalY - pos.y) / 60);
+        else if ((Math.abs(goalX - pos.x) + Math.abs(goalY - pos.y)) < 300)
+            v.set((goalX - pos.x) / 55, (goalY - pos.y) / 55);
+        else if ((Math.abs(goalX - pos.x) + Math.abs(goalY - pos.y)) < 500)
+            v.set((goalX - pos.x) / 50, (goalY - pos.y) / 50);
+        else if ((Math.abs(goalX - pos.x) + Math.abs(goalY - pos.y)) < 750)
+            v.set((goalX - pos.x) / 40, (goalY - pos.y) / 40);
+        else if ((Math.abs(goalX - pos.x) + Math.abs(goalY - pos.y)) < 1000)
+            v.set((goalX - pos.x) / 35, (goalY - pos.y) / 35);
+        else
+            v.set((goalX - pos.x) / 30, (goalY - pos.y) / 30);
         return false;
     }
 
     @Override
     public boolean keyDown(int keycode) {
-        if(keycode == 19) v.set(0, 10);
-        if(keycode == 20) v.set(0, -10);
-        if(keycode == 21) v.set(-10, 0);
-        if(keycode == 22) v.set(10, 0);
+        if(keycode == 19) v.set(v.x, 10);
+        if(keycode == 20) v.set(v.x, -10);
+        if(keycode == 21) v.set(-10, v.y);
+        if(keycode == 22) v.set(10, v.y);
         return false;
     }
 
     @Override
     public boolean keyUp(int keycode) {
-        if(keycode == 19) v.set(0, 0);
-        if(keycode == 20) v.set(0, 0);
-        if(keycode == 21) v.set(0, 0);
-        if(keycode == 22) v.set(0, 0);
+        if(keycode == 19) v.set(v.x, 0);
+        if(keycode == 20) v.set(v.x, 0);
+        if(keycode == 21) v.set(0, v.y);
+        if(keycode == 22) v.set(0, v.y);
         return false;
     }
 
