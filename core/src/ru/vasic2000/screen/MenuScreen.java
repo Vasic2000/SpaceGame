@@ -31,7 +31,7 @@ public class MenuScreen extends BaseScreen {
     public void show() {
         super.show();
         batch = new SpriteBatch();
-        img = new Texture("space.jpg");
+        img = new Texture("nebo2.jpg");
         ship = new Texture("ship.png");
 
         touch = new Vector2();
