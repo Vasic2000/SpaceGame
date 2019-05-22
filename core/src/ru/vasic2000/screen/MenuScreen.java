@@ -4,9 +4,13 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
 import ru.vasic2000.base.BaseScreen;
+import ru.vasic2000.math.Rect;
+import ru.vasic2000.sprite.Background;
+import ru.vasic2000.sprite.BadLogic;
 
 public class MenuScreen extends BaseScreen {
 
@@ -23,13 +27,19 @@ public class MenuScreen extends BaseScreen {
     private float downBorder;
     private float leftBorder;
 
-
     private float goalX;
     private float goalY;
+
+    private Texture bg;
+    private Texture badLogicTexture;
+    private Background background;
+    private BadLogic badLogic;
+
 
     @Override
     public void show() {
         super.show();
+        /*
         batch = new SpriteBatch();
         img = new Texture("nebo2.jpg");
         ship = new Texture("ship.png");
@@ -38,6 +48,12 @@ public class MenuScreen extends BaseScreen {
         v = new Vector2(0,0);
         pos = new Vector2(150 - ship.getWidth()/2, 150 - ship.getHeight()/2);
         go = pos;
+        */
+
+        bg = new Texture("nebo2.jpg");
+        background = new Background(new TextureRegion(bg));
+        badLogicTexture = new Texture("ship.png");
+        badLogic = new BadLogic(new TextureRegion(badLogicTexture));
     }
 
     @Override
@@ -46,6 +62,7 @@ public class MenuScreen extends BaseScreen {
         Gdx.gl.glClearColor(0.4f, 0.3f, 0.9f, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+        /*
         batch.begin();
         batch.draw(img, 0 , 0);
         batch.draw(ship, pos.x, pos.y);
@@ -68,17 +85,26 @@ public class MenuScreen extends BaseScreen {
 
         if(pos.y <= 0) pos.y = 0;
         if(pos.y >= Gdx.graphics.getHeight() - ship.getHeight()) pos.y = Gdx.graphics.getHeight() - ship.getHeight();
-
+*/
+        batch.begin();
+        background.draw(batch);
+        badLogic.draw(batch);
+        batch.end();
     }
 
     @Override
     public void dispose() {
+        /*
         batch.dispose();
         img.dispose();
         ship.dispose();
+        */
+        bg.dispose();
+        badLogicTexture.dispose();
         super.dispose();
     }
 
+    /*
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         super.touchDown(screenX, screenY, pointer, button);
@@ -131,6 +157,18 @@ public class MenuScreen extends BaseScreen {
         if(keycode == 21) v.set(0, v.y);
         if(keycode == 22) v.set(0, v.y);
         return false;
+    }
+*/
+    @Override
+    public void resize(Rect worldBounds) {
+        super.resize(worldBounds);
+        background.resize(worldBounds);
+        badLogic.resize(worldBounds);
+    }
+
+    @Override
+    public boolean touchDown(Vector2 touch, int pointer) {
+        return super.touchDown(touch, pointer);
     }
 
 }
