@@ -95,13 +95,14 @@ public class MenuScreen extends BaseScreen {
         badLogic.draw(batch);
         batch.end();
 
+        /*
         buf.set(touch);
         if (buf.sub(pos).len() <= LEN) {
             pos.set(touch);
         } else {
             pos.add(v);
         }
-
+*/
     }
 
     @Override
