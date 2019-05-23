@@ -48,7 +48,6 @@ public abstract class BaseScreen implements Screen, InputProcessor {
         screenBounds.setSize(width, height);
         screenBounds.setLeft(0);
         screenBounds.setBottom(0);
-
         float aspect = width / (float) height;
         worldBounds.setHeight(1f);
         worldBounds.setWidth(1f * aspect);

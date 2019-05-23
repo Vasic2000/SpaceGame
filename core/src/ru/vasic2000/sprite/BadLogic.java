@@ -15,6 +15,8 @@ public class BadLogic extends Sprite {
 
     @Override
     public void resize(Rect wordBounds) {
-        setHeightProportion(0.5f);
+        setHeightProportion(0.05f);
     }
+
+
 }

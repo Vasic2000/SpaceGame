@@ -3,7 +3,6 @@ package ru.vasic2000.screen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
@@ -13,15 +12,19 @@ import ru.vasic2000.sprite.Background;
 import ru.vasic2000.sprite.BadLogic;
 
 public class MenuScreen extends BaseScreen {
-
+/*
     private SpriteBatch batch;
     private Texture img;
     private Texture ship;
+*/
 
+    private static final float LEN = 0.5f;
     private Vector2 touch;
     private Vector2 v;
     private Vector2 pos;
-    private Vector2 go;
+    private Vector2 buf;
+
+  /*
     private float topBorder;
     private float rightBorder;
     private float downBorder;
@@ -29,7 +32,7 @@ public class MenuScreen extends BaseScreen {
 
     private float goalX;
     private float goalY;
-
+*/
     private Texture bg;
     private Texture badLogicTexture;
     private Background background;
@@ -43,12 +46,13 @@ public class MenuScreen extends BaseScreen {
         batch = new SpriteBatch();
         img = new Texture("nebo2.jpg");
         ship = new Texture("ship.png");
+        */
 
         touch = new Vector2();
         v = new Vector2(0,0);
-        pos = new Vector2(150 - ship.getWidth()/2, 150 - ship.getHeight()/2);
-        go = pos;
-        */
+        pos = new Vector2();
+        buf = new Vector2();
+
 
         bg = new Texture("nebo2.jpg");
         background = new Background(new TextureRegion(bg));
@@ -90,15 +94,18 @@ public class MenuScreen extends BaseScreen {
         background.draw(batch);
         badLogic.draw(batch);
         batch.end();
+
+        buf.set(touch);
+        if (buf.sub(pos).len() <= LEN) {
+            pos.set(touch);
+        } else {
+            pos.add(v);
+        }
+
     }
 
     @Override
     public void dispose() {
-        /*
-        batch.dispose();
-        img.dispose();
-        ship.dispose();
-        */
         bg.dispose();
         badLogicTexture.dispose();
         super.dispose();
@@ -140,13 +147,13 @@ public class MenuScreen extends BaseScreen {
             v.set((goalX - pos.x) / 30, (goalY - pos.y) / 30);
         return false;
     }
-
+*/
     @Override
     public boolean keyDown(int keycode) {
-        if(keycode == 19) v.set(v.x, 10);
-        if(keycode == 20) v.set(v.x, -10);
-        if(keycode == 21) v.set(-10, v.y);
-        if(keycode == 22) v.set(10, v.y);
+        if(keycode == 19) v.set(v.x, 0.1f);
+        if(keycode == 20) v.set(v.x, -0.1f);
+        if(keycode == 21) v.set(0.1f, v.y);
+        if(keycode == 22) v.set(0.1f, v.y);
         return false;
     }
 
@@ -158,7 +165,7 @@ public class MenuScreen extends BaseScreen {
         if(keycode == 22) v.set(0, v.y);
         return false;
     }
-*/
+
     @Override
     public void resize(Rect worldBounds) {
         super.resize(worldBounds);
