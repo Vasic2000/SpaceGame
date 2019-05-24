@@ -8,21 +8,12 @@ import ru.vasic2000.math.Rect;
 
 public class Sprite extends Rect {
 
-    protected static final float LEN = 0.5f;
-    protected Vector2 touch;
-    protected Vector2 v;
-    protected Vector2 pos;
-    protected Vector2 buf;
-
     protected float angle;
     protected float scale = 1f;
     protected TextureRegion[] regions;
     protected int frame;
 
     public Sprite(TextureRegion region) {
-        this.v = new Vector2(0,0);
-        this.pos = new Vector2();
-        this.buf = new Vector2();
 
         this.regions = new TextureRegion[1];
         this.regions[0] = region;
@@ -54,12 +45,6 @@ public class Sprite extends Rect {
     }
 
     public boolean touchDown(Vector2 touch, int pointer) {
-        buf.set(touch);
-        if (buf.sub(pos).len() <= LEN) {
-            pos.set(touch);
-        } else {
-            pos.add(v);
-        }
         return false;
     }
 
