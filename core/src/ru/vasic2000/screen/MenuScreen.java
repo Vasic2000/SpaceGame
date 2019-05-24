@@ -70,53 +70,27 @@ public class MenuScreen extends BaseScreen {
         badLogic.draw(batch);
         batch.end();
 
-
-        /*
-        batch.begin();
-        batch.draw(img, 0 , 0);
-        batch.draw(ship, pos.x, pos.y);
-        batch.end();
-
-        rightBorder = pos.x + ship.getWidth();
-        topBorder = pos.y + ship.getHeight();
-        leftBorder = pos.x;
-        downBorder = pos.y;
-
-        pos.add(v);
-
-        if((Math.abs(pos.x - goalX) < 2) && (Math.abs(pos.y - goalY) < 2)) {
-            v.set(0,0);
-            pos.set(goalX, goalY);
+//      Условия невылета за экран
+        if (badLogic.pos.x <= -0.5f + badLogic.getHalfWidth()) {
+            v.set(0, v.y);
+            badLogic.pos.set(-0.5f + badLogic.getHalfWidth() + 0.01f, badLogic.pos.y);
         }
-
-        if(pos.x <= 0) pos.x = 0;
-        if(pos.x >= Gdx.graphics.getWidth() - ship.getWidth()) pos.x = Gdx.graphics.getWidth() - ship.getWidth();
-
-        if(pos.y <= 0) pos.y = 0;
-        if(pos.y >= Gdx.graphics.getHeight() - ship.getHeight()) pos.y = Gdx.graphics.getHeight() - ship.getHeight();
-*/
-        /*
-        buf.set(touch);
-        if (buf.sub(pos).len() <= LEN) {
-            pos.set(touch);
-        } else {
-            pos.add(v);
+        if (badLogic.pos.x >= 0.5f - badLogic.getHalfWidth()) {
+            v.set(0, v.y);
+            badLogic.pos.set(0.5f - badLogic.getHalfWidth() - 0.01f, badLogic.pos.y );
         }
-
-*/
-        if (badLogic.pos.x <= -0.5f)
-            v.set(0,v.y);
-        if (badLogic.pos.x >= 0.5f)
-            v.set(0,v.y);
-        if (badLogic.pos.y <= -0.5f)
+        if (badLogic.pos.y <= -0.5f + badLogic.getHalfHeight()) {
             v.set(v.x, 0);
-        if (badLogic.pos.y >= 0.5f)
+            badLogic.pos.set(badLogic.pos.x, -0.5f + badLogic.getHalfHeight() + 0.01f);
+        }
+        if (badLogic.pos.y >= 0.5f - badLogic.getHalfHeight()) {
             v.set(v.x, 0);
+            badLogic.pos.set(badLogic.pos.x, 0.5f - badLogic.getHalfHeight() - 0.01f);
+        }
 
         badLogic.pos.add(v);
         System.out.println("X = " + badLogic.pos.x + "; Y = " + badLogic.pos.y);
 
-        //System.out.println("render touchX = " + touch.x + " touchY = " + touch.y + " v.x  = " + v.x + " v.y = " + v.y + " badLogic.pos.x = " + badLogic.pos.x + " badLogic.pos.y = " + badLogic.pos.y);
     }
 
     @Override
