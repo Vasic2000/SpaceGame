@@ -48,6 +48,7 @@ public abstract class BaseScreen implements Screen, InputProcessor {
         screenBounds.setSize(width, height);
         screenBounds.setLeft(0);
         screenBounds.setBottom(0);
+
         float aspect = width / (float) height;
         worldBounds.setHeight(1f);
         worldBounds.setWidth(1f * aspect);
@@ -86,13 +87,13 @@ public abstract class BaseScreen implements Screen, InputProcessor {
 
     @Override
     public boolean keyDown(int keycode) {
-//        System.out.println("keyDown keycode = " + keycode);
+        System.out.println("keyDown keycode = " + keycode);
         return false;
     }
 
     @Override
     public boolean keyUp(int keycode) {
-//        System.out.println("keyUp keycode = " + keycode);
+        System.out.println("keyUp keycode = " + keycode);
         return false;
     }
 
