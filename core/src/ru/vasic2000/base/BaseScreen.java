@@ -15,7 +15,7 @@ public abstract class BaseScreen implements Screen, InputProcessor {
 
     protected SpriteBatch batch;
 
-    private Vector2 touch;
+    protected Vector2 touch;
 
     private Rect screenBounds;
     private Rect worldBounds;
@@ -24,6 +24,9 @@ public abstract class BaseScreen implements Screen, InputProcessor {
     private Matrix4 worldToGl;
     private Matrix3 screenToWorld;
 
+    protected Vector2 touchNew;
+    protected Vector2 v;
+    protected float speed;
 
     @Override
     public void show() {
@@ -36,10 +39,16 @@ public abstract class BaseScreen implements Screen, InputProcessor {
         this.glBounds = new Rect(0, 0, 1f, 1f);
         this.worldToGl = new Matrix4();
         this.screenToWorld = new Matrix3();
+
+        this.touchNew = new Vector2();
+        this.v = new Vector2();
+
+        this.speed = 0.007f;
     }
 
     @Override
     public void render(float delta) {
+
     }
 
     @Override
@@ -56,6 +65,7 @@ public abstract class BaseScreen implements Screen, InputProcessor {
         batch.setProjectionMatrix(worldToGl);
         MatrixUtils.calcTransitionMatrix(screenToWorld, screenBounds, worldBounds);
         resize(worldBounds);
+
     }
 
     public void resize(Rect worldBounds) {
@@ -108,6 +118,10 @@ public abstract class BaseScreen implements Screen, InputProcessor {
         System.out.println("touchDown screenX = " + screenX + " screenY = " + screenY);
         touch.set(screenX, screenBounds.getHeight() - screenY).mul(screenToWorld);
         touchDown(touch, pointer);
+        touchNew.set(touch);
+        touch.sub(glBounds.pos);
+        touch.nor();
+        v.set(touch).scl(speed);
         return false;
     }
 
