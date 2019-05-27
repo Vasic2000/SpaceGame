@@ -7,7 +7,7 @@ import com.badlogic.gdx.math.Vector2;
 import ru.vasic2000.base.Sprite;
 import ru.vasic2000.math.Rect;
 
-public class BadLogic extends Sprite {
+public class UFO extends Sprite {
     private static final float LEN = 0.005f;
 
     private Vector2 v;
@@ -15,7 +15,7 @@ public class BadLogic extends Sprite {
     private Vector2 buf;
 
 
-    public BadLogic(TextureRegion region) {
+    public UFO(TextureRegion region) {
         super(region);
         regions[frame].getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         v = new Vector2();

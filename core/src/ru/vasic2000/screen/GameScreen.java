@@ -1,6 +1,5 @@
 package ru.vasic2000.screen;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
@@ -12,43 +11,37 @@ import ru.vasic2000.base.BaseScreen;
 import ru.vasic2000.math.Rect;
 import ru.vasic2000.sprite.Background;
 import ru.vasic2000.sprite.ButtonExit;
-import ru.vasic2000.sprite.ButtonPlay;
 import ru.vasic2000.sprite.Star;
+import ru.vasic2000.sprite.UFO;
 
-public class MenuScreen extends BaseScreen {
+public class GameScreen extends BaseScreen {
+    private static final int STAR_COUNT = 64;
 
-    private static final int STAR_COUNT = 256;
-    private Game game;
     private Texture bg;
     private Background background;
     private TextureAtlas atlas;
     private Star[] starArray;
 
-    private ButtonExit buttonExit;
-    private ButtonPlay buttonPlay;
-
-    public MenuScreen(Game game) {
-        this.game = game;
-    }
+    private Texture badLogicTexture;
+    private UFO badLogic;
 
     @Override
     public void show() {
         super.show();
         bg = new Texture("nebo2.jpg");
         background = new Background(new TextureRegion(bg));
+        badLogicTexture = new Texture("ship.png");
+        badLogic = new UFO(new TextureRegion(badLogicTexture));
 
-        atlas = new TextureAtlas("textures/menuAtlas.tpack");
+        atlas = new TextureAtlas("textures/mainAtlas.tpack");
         starArray = new Star[STAR_COUNT];
         for (int i = 0; i < STAR_COUNT; i++) {
             starArray[i] = new Star(atlas);
         }
-        buttonExit = new ButtonExit(atlas);
-        buttonPlay = new ButtonPlay(atlas, game);
     }
 
     @Override
     public void render(float delta) {
-        super.render(delta);
         update(delta);
         draw();
     }
@@ -56,6 +49,8 @@ public class MenuScreen extends BaseScreen {
     private void update(float delta) {
         for (Star star : starArray)
             star.update(delta);
+
+        badLogic.update(delta);
     }
 
     private void draw() {
@@ -63,51 +58,57 @@ public class MenuScreen extends BaseScreen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
         background.draw(batch);
-        for (Star star : starArray) {
+        for (Star star : starArray)
             star.draw(batch);
-        }
-        buttonExit.draw(batch);
-        buttonPlay.draw(batch);
+
+        badLogic.draw(batch);
         batch.end();
     }
-
-    @Override
-    public void dispose() {
-        bg.dispose();
-        atlas.dispose();
-        super.dispose();
-    }
-
 
     @Override
     public void resize(Rect worldBounds) {
         super.resize(worldBounds);
         background.resize(worldBounds);
-        for (Star star : starArray)
+        badLogic.resize(worldBounds);
+        for (Star star : starArray) {
             star.resize(worldBounds);
-        buttonExit.resize(worldBounds);
-        buttonPlay.resize(worldBounds);
+        }
     }
 
     @Override
-    public boolean touchDown(Vector2 touch, int pointer) {
-        buttonExit.touchDown(touch, pointer);
-        buttonPlay.touchDown(touch, pointer);
-        return false;
-    }
-
-    @Override
-    public boolean touchUp(Vector2 touch, int pointer) {
-        buttonExit.touchUp(touch, pointer);
-        buttonPlay.touchUp(touch, pointer);
-        return false;
+    public void dispose() {
+        bg.dispose();
+        badLogicTexture.dispose();
+        atlas.dispose();
+        super.dispose();
     }
 
     @Override
     public boolean keyDown(int keycode) {
-        if(keycode == 131) {
-            Gdx.app.exit();
+        if(keycode != 131) {
+            badLogic.keyDown(keycode);
+            return super.keyDown(keycode);
         }
-        return false;
+        else {
+            Gdx.app.exit();
+            return true;
+        }
+    }
+
+    @Override
+    public boolean keyUp(int keycode) {
+        badLogic.keyUp(keycode);
+        return super.keyUp(keycode);
+    }
+
+    @Override
+    public boolean touchDown(Vector2 touch, int pointer) {
+        badLogic.touchDown(touch, pointer);
+        return super.touchDown(touch, pointer);
+    }
+
+    @Override
+    public boolean touchUp(Vector2 touch, int pointer) {
+        return super.touchUp(touch, pointer);
     }
 }
