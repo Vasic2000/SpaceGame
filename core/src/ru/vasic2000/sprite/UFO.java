@@ -62,16 +62,22 @@ public class UFO extends Sprite {
     }
 
     public boolean keyDown(int keycode) {
-        if(keycode == 131)
+        if (keycode == 131)
             Gdx.app.exit();
-        if (keycode == 21)
+        if (keycode == 21) {
             v.set(-0.01f, 0);
-        if(pos.x > LeftBorder)
-            pos.add(v);
-        if (keycode == 22)
+            if (pos.x > LeftBorder)
+                pos.add(v);
+            else
+                v.set(0,0);
+        }
+        if (keycode == 22) {
             v.set(0.01f, 0);
-        if(pos.x < RightBorder)
-            pos.add(v);
+            if (pos.x < RightBorder)
+                pos.add(v);
+            else
+                v.set(0,0);
+        }
         return false;
     }
 
