@@ -9,10 +9,13 @@ import ru.vasic2000.base.Sprite;
 import ru.vasic2000.math.Rect;
 
 public class UFO extends Sprite {
-    private static final float LEN = 0.005f;
+    private static final float LEN = 0.01f;
     private Vector2 v;
     private Vector2 touch;
     private Vector2 buf;
+
+    float LeftBorder;
+    float RightBorder;
 
     public UFO(TextureRegion region) {
         super(region);
@@ -32,7 +35,6 @@ public class UFO extends Sprite {
             v.set(0,0);
         } else {
             pos.add(v);
-
         }
     }
 
@@ -41,15 +43,19 @@ public class UFO extends Sprite {
         setHeightProportion(0.05f);
         setLeft(wordBounds.getLeft() + wordBounds.getHalfWidth() - 0.025f);
         setBottom(wordBounds.getBottom() + 0.03f);
+        LeftBorder = wordBounds.getLeft() + this.getHalfWidth();
+        RightBorder = wordBounds.getRight() - this.getHalfWidth();
     }
 
     @Override
     public boolean touchDown(Vector2 touch, int pointer) {
-        System.out.println("pos.x = " + pos.x + " pos.y " + pos.y);
-        System.out.println("X = " + touch.x + " pos.y " + pos.y);
         this.touch = touch;
-        touch.set(touch.x, pos.y);
-        System.out.println("X = " + touch.x + " Y " + touch.y);
+        if(touch.x < LeftBorder)
+            touch.set(LeftBorder, pos.y);
+        else if(touch.x > RightBorder)
+            touch.set(RightBorder, pos.y);
+        else
+            touch.set(touch.x, pos.y);
          v.set(touch.cpy().sub(pos)).setLength(LEN);
         return false;
     }
@@ -57,10 +63,10 @@ public class UFO extends Sprite {
     public boolean keyDown(int keycode) {
         if(keycode == 131)
             Gdx.app.exit();
-        if(keycode == 21)
-            v.set(-0.005f, 0);
-        if(keycode == 22)
-            v.set(0.005f, 0);
+        if (keycode == 21)
+            v.set(-0.01f, 0);
+        if (keycode == 22)
+            v.set(0.01f, 0);
         return false;
     }
 
