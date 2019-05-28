@@ -10,9 +10,8 @@ import com.badlogic.gdx.math.Vector2;
 import ru.vasic2000.base.BaseScreen;
 import ru.vasic2000.math.Rect;
 import ru.vasic2000.sprite.Background;
-import ru.vasic2000.sprite.ButtonExit;
 import ru.vasic2000.sprite.Star;
-import ru.vasic2000.sprite.UFO;
+
 
 public class GameScreen extends BaseScreen {
     private static final int STAR_COUNT = 64;
@@ -22,16 +21,11 @@ public class GameScreen extends BaseScreen {
     private TextureAtlas atlas;
     private Star[] starArray;
 
-    private Texture badLogicTexture;
-    private UFO badLogic;
-
     @Override
     public void show() {
         super.show();
         bg = new Texture("nebo2.jpg");
         background = new Background(new TextureRegion(bg));
-        badLogicTexture = new Texture("ship.png");
-        badLogic = new UFO(new TextureRegion(badLogicTexture));
 
         atlas = new TextureAtlas("textures/mainAtlas.tpack");
         starArray = new Star[STAR_COUNT];
@@ -49,8 +43,6 @@ public class GameScreen extends BaseScreen {
     private void update(float delta) {
         for (Star star : starArray)
             star.update(delta);
-
-        badLogic.update(delta);
     }
 
     private void draw() {
@@ -60,8 +52,6 @@ public class GameScreen extends BaseScreen {
         background.draw(batch);
         for (Star star : starArray)
             star.draw(batch);
-
-        badLogic.draw(batch);
         batch.end();
     }
 
@@ -69,7 +59,6 @@ public class GameScreen extends BaseScreen {
     public void resize(Rect worldBounds) {
         super.resize(worldBounds);
         background.resize(worldBounds);
-        badLogic.resize(worldBounds);
         for (Star star : starArray) {
             star.resize(worldBounds);
         }
@@ -78,33 +67,8 @@ public class GameScreen extends BaseScreen {
     @Override
     public void dispose() {
         bg.dispose();
-        badLogicTexture.dispose();
         atlas.dispose();
         super.dispose();
-    }
-
-    @Override
-    public boolean keyDown(int keycode) {
-        if(keycode != 131) {
-            badLogic.keyDown(keycode);
-            return super.keyDown(keycode);
-        }
-        else {
-            Gdx.app.exit();
-            return true;
-        }
-    }
-
-    @Override
-    public boolean keyUp(int keycode) {
-        badLogic.keyUp(keycode);
-        return super.keyUp(keycode);
-    }
-
-    @Override
-    public boolean touchDown(Vector2 touch, int pointer) {
-        badLogic.touchDown(touch, pointer);
-        return super.touchDown(touch, pointer);
     }
 
     @Override

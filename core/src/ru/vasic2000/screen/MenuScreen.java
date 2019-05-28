@@ -102,12 +102,4 @@ public class MenuScreen extends BaseScreen {
         buttonPlay.touchUp(touch, pointer);
         return false;
     }
-
-    @Override
-    public boolean keyDown(int keycode) {
-        if(keycode == 131) {
-            Gdx.app.exit();
-        }
-        return false;
-    }
 }
