@@ -33,6 +33,7 @@ public class UFO extends Sprite {
         if (buf.sub(pos).len() <= LEN) {
             pos.set(touch);
             v.set(0,0);
+            touch.set(0,0);
         } else {
             pos.add(v);
         }
@@ -56,7 +57,7 @@ public class UFO extends Sprite {
             touch.set(RightBorder, pos.y);
         else
             touch.set(touch.x, pos.y);
-         v.set(touch.cpy().sub(pos)).setLength(LEN);
+        v.set(touch.cpy().sub(pos)).setLength(LEN);
         return false;
     }
 
@@ -65,8 +66,12 @@ public class UFO extends Sprite {
             Gdx.app.exit();
         if (keycode == 21)
             v.set(-0.01f, 0);
+        if(pos.x > LeftBorder)
+            pos.add(v);
         if (keycode == 22)
             v.set(0.01f, 0);
+        if(pos.x < RightBorder)
+            pos.add(v);
         return false;
     }
 
