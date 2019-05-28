@@ -91,6 +91,7 @@ public class MenuScreen extends BaseScreen {
 
     @Override
     public boolean keyDown(int keycode) {
+        System.out.println("Key = " + keycode);
         if(keycode == 131) {
             Gdx.app.exit();
         }

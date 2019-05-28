@@ -74,23 +74,9 @@ public class GameScreen extends BaseScreen {
     }
 
     @Override
-    public void dispose() {
-        bg.dispose();
-        atlas.dispose();
-        badLogicTexture.dispose();
-        super.dispose();
-    }
-
-    @Override
     public boolean keyDown(int keycode) {
-        if(keycode != 131) {
-            badLogic.keyDown(keycode);
-            return super.keyDown(keycode);
-        }
-        else {
-            Gdx.app.exit();
-            return true;
-        }
+        badLogic.keyDown(keycode);
+        return super.keyDown(keycode);
     }
 
     @Override
@@ -98,6 +84,22 @@ public class GameScreen extends BaseScreen {
         badLogic.keyUp(keycode);
         return super.keyUp(keycode);
     }
+
+    @Override
+    public boolean keyTyped(char character) {
+        super.keyTyped(character);
+        return false;
+    }
+
+    @Override
+    public void dispose() {
+        bg.dispose();
+        atlas.dispose();
+        badLogicTexture.dispose();
+        super.dispose();
+    }
+
+
 
     @Override
     public boolean touchUp(Vector2 touch, int pointer) {

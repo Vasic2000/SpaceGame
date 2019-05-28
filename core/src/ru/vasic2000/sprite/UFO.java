@@ -1,5 +1,6 @@
 package ru.vasic2000.sprite;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
@@ -28,38 +29,52 @@ public class UFO extends Sprite {
 
         if (buf.sub(pos).len() <= LEN) {
             pos.set(touch);
+            v.set(0,0);
         } else {
             pos.add(v);
+
         }
     }
 
     @Override
     public void resize(Rect wordBounds) {
         setHeightProportion(0.05f);
+        setLeft(wordBounds.getLeft() + wordBounds.getHalfWidth() - 0.025f);
+        setBottom(wordBounds.getBottom() + 0.03f);
     }
 
     @Override
     public boolean touchDown(Vector2 touch, int pointer) {
+        System.out.println("pos.x = " + pos.x + " pos.y " + pos.y);
+        System.out.println("X = " + touch.x + " pos.y " + pos.y);
         this.touch = touch;
-        v.set(touch.cpy().sub(pos)).setLength(LEN);
+        touch.set(touch.x, pos.y);
+        System.out.println("X = " + touch.x + " Y " + touch.y);
+         v.set(touch.cpy().sub(pos)).setLength(LEN);
         return false;
     }
 
     public boolean keyDown(int keycode) {
-        if(keycode == 19) v.set(v.x, 0.005f);
-        if(keycode == 20) v.set(v.x, -0.005f);
-        if(keycode == 21) v.set(-0.005f, v.y);
-        if(keycode == 22) v.set(0.005f, v.y);
-        pos.add(v);
+        if(keycode == 131)
+            Gdx.app.exit();
+        if(keycode == 21)
+            v.set(-0.005f, 0);
+        if(keycode == 22)
+            v.set(0.005f, 0);
+        return false;
+    }
+
+    @Override
+    public boolean keyTyped(char character) {
+        System.out.println("keyTyped keycode = " + character);
         return false;
     }
 
     public boolean keyUp(int keycode) {
-        if(keycode == 19) v.set(v.x, 0);
-        if(keycode == 20) v.set(v.x, 0);
-        if(keycode == 21) v.set(0, v.y);
-        if(keycode == 22) v.set(0, v.y);
-        pos.add(v);
+        if(keycode == 21)
+            v.set(0, 0);
+        if(keycode == 22)
+            v.set(0, 0);
         return false;
     }
 }

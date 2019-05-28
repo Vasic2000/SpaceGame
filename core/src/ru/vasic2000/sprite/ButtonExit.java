@@ -17,7 +17,6 @@ public class ButtonExit extends ScaledTouchUpButton {
         setLeft(wordBounds.getLeft() + 0.03f);
         setBottom(wordBounds.getBottom() + 0.03f);
     }
-
     @Override
     public void action() {
         Gdx.app.exit();

@@ -89,6 +89,17 @@ public abstract class BaseScreen implements Screen, InputProcessor {
     }
 
     @Override
+    public boolean keyDown(int keycode) {
+        System.out.println(keycode);
+        return false;
+    }
+
+    @Override
+    public boolean keyUp(int keycode) {
+        return false;
+    }
+
+    @Override
     public void dispose() {
         System.out.println("dispose");
         batch.dispose();
@@ -96,20 +107,8 @@ public abstract class BaseScreen implements Screen, InputProcessor {
 
 
     @Override
-    public boolean keyDown(int keycode) {
-        System.out.println("keyDown keycode = " + keycode);
-        return false;
-    }
-
-    @Override
-    public boolean keyUp(int keycode) {
-        System.out.println("keyUp keycode = " + keycode);
-        return false;
-    }
-
-    @Override
     public boolean keyTyped(char character) {
-//        System.out.println("keyTyped keycode = " + character);
+        System.out.println("keyTyped keycode = " + character);
         return false;
     }
 
