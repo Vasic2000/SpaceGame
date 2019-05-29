@@ -11,6 +11,7 @@ import ru.vasic2000.base.BaseScreen;
 import ru.vasic2000.math.Rect;
 import ru.vasic2000.sprite.Background;
 import ru.vasic2000.sprite.Star;
+import ru.vasic2000.sprite.UFO;
 
 
 public class GameScreen extends BaseScreen {
@@ -21,11 +22,16 @@ public class GameScreen extends BaseScreen {
     private TextureAtlas atlas;
     private Star[] starArray;
 
+    private Texture badLogicTexture;
+    private UFO badLogic;
+
     @Override
     public void show() {
         super.show();
         bg = new Texture("nebo2.jpg");
         background = new Background(new TextureRegion(bg));
+        badLogicTexture = new Texture("ship.png");
+        badLogic = new UFO(new TextureRegion(badLogicTexture));
 
         atlas = new TextureAtlas("textures/mainAtlas.tpack");
         starArray = new Star[STAR_COUNT];
@@ -43,6 +49,7 @@ public class GameScreen extends BaseScreen {
     private void update(float delta) {
         for (Star star : starArray)
             star.update(delta);
+        badLogic.update(delta);
     }
 
     private void draw() {
@@ -52,6 +59,7 @@ public class GameScreen extends BaseScreen {
         background.draw(batch);
         for (Star star : starArray)
             star.draw(batch);
+        badLogic.draw(batch);
         batch.end();
     }
 
@@ -62,17 +70,40 @@ public class GameScreen extends BaseScreen {
         for (Star star : starArray) {
             star.resize(worldBounds);
         }
+        badLogic.resize(worldBounds);
+    }
+
+    @Override
+    public boolean keyDown(int keycode) {
+        badLogic.keyDown(keycode);
+        return super.keyDown(keycode);
+    }
+
+    @Override
+    public boolean keyUp(int keycode) {
+        badLogic.keyUp(keycode);
+        return super.keyUp(keycode);
+    }
+
+    @Override
+    public boolean keyTyped(char character) {
+        super.keyTyped(character);
+        return false;
     }
 
     @Override
     public void dispose() {
         bg.dispose();
         atlas.dispose();
+        badLogicTexture.dispose();
         super.dispose();
     }
 
+
+
     @Override
     public boolean touchUp(Vector2 touch, int pointer) {
+        badLogic.touchDown(touch, pointer);
         return super.touchUp(touch, pointer);
     }
 }
