@@ -12,10 +12,10 @@ public class Background extends Sprite {
     }
 
     @Override
-    public void resize(Rect wordBounds) {
-        if(wordBounds.getHeight() > wordBounds.getWidth())
+    public void resize(Rect worldBounds) {
+        if(worldBounds.getHeight() > worldBounds.getWidth())
             setHeightProportion(1f);
-        else setHeightProportion(wordBounds.getWidth()/wordBounds.getHeight());
-        pos.set(wordBounds.pos);
+        else setHeightProportion(worldBounds.getWidth()/worldBounds.getHeight());
+        pos.set(worldBounds.pos);
     }
 }

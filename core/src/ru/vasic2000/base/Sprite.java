@@ -4,17 +4,26 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
+import ru.vasic2000.Utils.Regions;
 import ru.vasic2000.math.Rect;
 
 public class Sprite extends Rect {
     protected float angle;
     protected float scale = 1f;
     protected TextureRegion[] regions;
-    protected int frame;
+    protected int frame = 0;
+    private boolean isDestroyed;
+
+    public Sprite() {
+    }
 
     public Sprite(TextureRegion region) {
         this.regions = new TextureRegion[1];
         this.regions[0] = region;
+    }
+
+    public Sprite(TextureRegion region, int rows, int cols, int frames) {
+        this.regions = Regions.split(region, rows, cols, frames);
     }
 
     public void draw(SpriteBatch batch) {
@@ -32,7 +41,7 @@ public class Sprite extends Rect {
 
     }
 
-    public void resize(Rect wordBounds) {
+    public void resize(Rect worldBounds) {
 
     }
 
@@ -66,8 +75,15 @@ public class Sprite extends Rect {
         this.scale = scale;
     }
 
-    public boolean keyTyped(char character) {
-        System.out.println("keyTyped keycode = " + character);
-        return false;
+    public boolean isDestroyed() {
+        return isDestroyed;
+    }
+
+    public void flushDestroy() {
+        isDestroyed = false;
+    }
+
+    public void destroy() {
+        isDestroyed = true;
     }
 }
