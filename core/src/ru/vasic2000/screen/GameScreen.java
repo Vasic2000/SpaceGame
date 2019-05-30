@@ -34,6 +34,7 @@ public class GameScreen extends BaseScreen {
         background = new Background(new TextureRegion(bg));
         badLogicTexture = new Texture("ship.png");
         atlas = new TextureAtlas("textures/mainAtlas.tpack");
+        bulletPool = new BulletPool();
         mainShip = new UFO(new TextureRegion(badLogicTexture),bulletPool, atlas);
 
         atlas = new TextureAtlas("textures/mainAtlas.tpack");
@@ -41,7 +42,6 @@ public class GameScreen extends BaseScreen {
         for (int i = 0; i < STAR_COUNT; i++) {
             starArray[i] = new Star(atlas);
         }
-        bulletPool = new BulletPool();
     }
 
     @Override
