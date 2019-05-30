@@ -1,6 +1,8 @@
 package ru.vasic2000.screen;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -27,6 +29,8 @@ public class GameScreen extends BaseScreen {
     private UFO mainShip;
     private BulletPool bulletPool;
 
+    Music music;
+
     @Override
     public void show() {
         super.show();
@@ -36,7 +40,6 @@ public class GameScreen extends BaseScreen {
         atlas2 = new TextureAtlas("textures/ufo.pack.pack");
         bulletPool = new BulletPool();
         mainShip = new UFO(atlas2, bulletPool);
-
         atlas = new TextureAtlas("textures/mainAtlas.tpack");
         starArray = new Star[STAR_COUNT];
         for (int i = 0; i < STAR_COUNT; i++) {
@@ -109,6 +112,7 @@ public class GameScreen extends BaseScreen {
         atlas.dispose();
         badLogicTexture.dispose();
         bulletPool.dispose();
+        music.dispose();
         super.dispose();
     }
 

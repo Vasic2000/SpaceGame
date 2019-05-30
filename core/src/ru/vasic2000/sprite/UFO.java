@@ -2,13 +2,13 @@ package ru.vasic2000.sprite;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
 import ru.vasic2000.Pool.BulletPool;
-import ru.vasic2000.base.BaseScreen;
 import ru.vasic2000.base.Sprite;
 import ru.vasic2000.math.Rect;
 
@@ -33,6 +33,8 @@ public class UFO extends Sprite {
     private int leftPointer = INVALID_POINTER;
     private int rightPointer = INVALID_POINTER;
 
+    Sound lazer;
+
     //Счётчик кадров до выстрела
     int ii = 0;
 
@@ -45,7 +47,7 @@ public class UFO extends Sprite {
         v0 = new Vector2(0.5f, 0);
         bulletV = new Vector2(0, 0.5f);
         bulletPos = new Vector2();
-
+        lazer = Gdx.audio.newSound(Gdx.files.internal("sound/laser.mp3"));
     }
 
     @Override
@@ -71,7 +73,7 @@ public class UFO extends Sprite {
         this.worldBounds = wordBounds;
         int high = Gdx.graphics.getHeight();
         float fps = Gdx.graphics.getDeltaTime();
-        frequencyOfBullets = Math.round(high * fps * v0.x);
+        frequencyOfBullets = Math.round(fps * high);
         setHeightProportion(0.05f);
         setBottom(worldBounds.getBottom() + 0.05f);
     }
@@ -184,5 +186,6 @@ public class UFO extends Sprite {
         bullet1.set(this, bulletRegion, bulletPos, bulletV, 0.01f, worldBounds, 1);
         bulletPos.x -= 0.07f;
         bullet2.set(this, bulletRegion, bulletPos, bulletV, 0.01f, worldBounds, 1);
+        lazer.play();
     }
 }
