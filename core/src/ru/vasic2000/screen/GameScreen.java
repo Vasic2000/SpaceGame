@@ -20,7 +20,7 @@ public class GameScreen extends BaseScreen {
 
     private Texture bg;
     private Background background;
-    private TextureAtlas atlas;
+    private TextureAtlas atlas, atlas2;
     private Star[] starArray;
 
     private Texture badLogicTexture;
@@ -33,9 +33,9 @@ public class GameScreen extends BaseScreen {
         bg = new Texture("nebo2.jpg");
         background = new Background(new TextureRegion(bg));
         badLogicTexture = new Texture("ship.png");
-        atlas = new TextureAtlas("textures/mainAtlas.tpack");
+        atlas2 = new TextureAtlas("textures/ufo.pack.pack");
         bulletPool = new BulletPool();
-        mainShip = new UFO(new TextureRegion(badLogicTexture),bulletPool, atlas);
+        mainShip = new UFO(atlas2, bulletPool);
 
         atlas = new TextureAtlas("textures/mainAtlas.tpack");
         starArray = new Star[STAR_COUNT];
