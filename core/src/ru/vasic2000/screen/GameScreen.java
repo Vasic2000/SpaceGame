@@ -1,8 +1,6 @@
 package ru.vasic2000.screen;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -28,8 +26,6 @@ public class GameScreen extends BaseScreen {
     private Texture badLogicTexture;
     private UFO mainShip;
     private BulletPool bulletPool;
-
-    Music music;
 
     @Override
     public void show() {
@@ -85,7 +81,6 @@ public class GameScreen extends BaseScreen {
             star.resize(worldBounds);
         }
         mainShip.resize(worldBounds);
-        bulletPool.drawActiveSprites(batch);
     }
 
     @Override
@@ -112,7 +107,6 @@ public class GameScreen extends BaseScreen {
         atlas.dispose();
         badLogicTexture.dispose();
         bulletPool.dispose();
-        music.dispose();
         super.dispose();
     }
 

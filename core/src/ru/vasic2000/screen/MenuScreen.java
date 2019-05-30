@@ -2,7 +2,6 @@ package ru.vasic2000.screen;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -31,8 +30,6 @@ public class MenuScreen extends BaseScreen {
     public MenuScreen(Game game) {
         this.game = game;
     }
-
-    Music music;
 
     @Override
     public void show() {
@@ -99,6 +96,7 @@ public class MenuScreen extends BaseScreen {
     public boolean keyDown(int keycode) {
         System.out.println("Key = " + keycode);
         if(keycode == 131) {
+            music.dispose();
             Gdx.app.exit();
         }
         return false;

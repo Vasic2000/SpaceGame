@@ -71,9 +71,10 @@ public class UFO extends Sprite {
     @Override
     public void resize(Rect wordBounds) {
         this.worldBounds = wordBounds;
-        int high = Gdx.graphics.getHeight();
-        float fps = Gdx.graphics.getDeltaTime();
-        frequencyOfBullets = Math.round(fps * high);
+//        int high = Gdx.graphics.getHeight();
+//        float fps = Gdx.graphics.getDeltaTime();
+//        frequencyOfBullets = Math.round(fps * high);
+        frequencyOfBullets = 25;
         setHeightProportion(0.05f);
         setBottom(worldBounds.getBottom() + 0.05f);
     }
