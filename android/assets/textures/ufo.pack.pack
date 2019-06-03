@@ -1,0 +1,19 @@
+
+ufo.pack.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+ship
+  rotate: false
+  xy: 1, 1
+  size: 200, 101
+  orig: 200, 101
+  offset: 0, 0
+  index: -1
+Laser
+  rotate: false
+  xy: 203, 77
+  size: 10, 25
+  orig: 10, 25
+  offset: 0, 0
+  index: -1

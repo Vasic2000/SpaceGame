@@ -17,9 +17,9 @@ public class ButtonPlay extends ScaledTouchUpButton {
     }
 
     @Override
-    public void resize(Rect wordBounds) {
-        setRight(wordBounds.getRight() - 0.03f);
-        setBottom(wordBounds.getBottom() + 0.03f);
+    public void resize(Rect worldBounds) {
+        setRight(worldBounds.getRight() - 0.03f);
+        setBottom(worldBounds.getBottom() + 0.03f);
     }
 
     @Override

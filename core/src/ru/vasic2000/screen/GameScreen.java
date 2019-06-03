@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
+import ru.vasic2000.Pool.BulletPool;
 import ru.vasic2000.base.BaseScreen;
 import ru.vasic2000.math.Rect;
 import ru.vasic2000.sprite.Background;
@@ -19,11 +20,12 @@ public class GameScreen extends BaseScreen {
 
     private Texture bg;
     private Background background;
-    private TextureAtlas atlas;
+    private TextureAtlas atlas, atlas2;
     private Star[] starArray;
 
     private Texture badLogicTexture;
-    private UFO badLogic;
+    private UFO mainShip;
+    private BulletPool bulletPool;
 
     @Override
     public void show() {
@@ -31,8 +33,9 @@ public class GameScreen extends BaseScreen {
         bg = new Texture("nebo2.jpg");
         background = new Background(new TextureRegion(bg));
         badLogicTexture = new Texture("ship.png");
-        badLogic = new UFO(new TextureRegion(badLogicTexture));
-
+        atlas2 = new TextureAtlas("textures/ufo.pack.pack");
+        bulletPool = new BulletPool();
+        mainShip = new UFO(atlas2, bulletPool);
         atlas = new TextureAtlas("textures/mainAtlas.tpack");
         starArray = new Star[STAR_COUNT];
         for (int i = 0; i < STAR_COUNT; i++) {
@@ -43,13 +46,19 @@ public class GameScreen extends BaseScreen {
     @Override
     public void render(float delta) {
         update(delta);
+        freeAllDestroyedActiveObjects();
         draw();
+    }
+
+    private void freeAllDestroyedActiveObjects() {
+        bulletPool.freeAllDestroyedActiveSprites();
     }
 
     private void update(float delta) {
         for (Star star : starArray)
             star.update(delta);
-        badLogic.update(delta);
+        mainShip.update(delta);
+        bulletPool.updateActiveSprites(delta);
     }
 
     private void draw() {
@@ -59,7 +68,8 @@ public class GameScreen extends BaseScreen {
         background.draw(batch);
         for (Star star : starArray)
             star.draw(batch);
-        badLogic.draw(batch);
+        mainShip.draw(batch);
+        bulletPool.drawActiveSprites(batch);
         batch.end();
     }
 
@@ -70,18 +80,18 @@ public class GameScreen extends BaseScreen {
         for (Star star : starArray) {
             star.resize(worldBounds);
         }
-        badLogic.resize(worldBounds);
+        mainShip.resize(worldBounds);
     }
 
     @Override
     public boolean keyDown(int keycode) {
-        badLogic.keyDown(keycode);
+        mainShip.keyDown(keycode);
         return super.keyDown(keycode);
     }
 
     @Override
     public boolean keyUp(int keycode) {
-        badLogic.keyUp(keycode);
+        mainShip.keyUp(keycode);
         return super.keyUp(keycode);
     }
 
@@ -96,14 +106,19 @@ public class GameScreen extends BaseScreen {
         bg.dispose();
         atlas.dispose();
         badLogicTexture.dispose();
+        bulletPool.dispose();
         super.dispose();
     }
 
-
+    @Override
+    public boolean touchDown(Vector2 touch, int pointer) {
+        mainShip.touchDown(touch, pointer);
+        return false;
+    }
 
     @Override
     public boolean touchUp(Vector2 touch, int pointer) {
-        badLogic.touchDown(touch, pointer);
+        mainShip.touchUp(touch, pointer);
         return super.touchUp(touch, pointer);
     }
 }

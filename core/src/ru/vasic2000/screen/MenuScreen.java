@@ -44,6 +44,9 @@ public class MenuScreen extends BaseScreen {
         }
         buttonExit = new ButtonExit(atlas);
         buttonPlay = new ButtonPlay(atlas, game);
+        music = Gdx.audio.newMusic( Gdx.files.internal("sound/Butterfly.mp3"));
+        music.setLooping(true);
+        music.play();
     }
 
     @Override
@@ -93,6 +96,7 @@ public class MenuScreen extends BaseScreen {
     public boolean keyDown(int keycode) {
         System.out.println("Key = " + keycode);
         if(keycode == 131) {
+            music.dispose();
             Gdx.app.exit();
         }
         return false;
