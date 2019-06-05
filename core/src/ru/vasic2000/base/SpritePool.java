@@ -5,7 +5,9 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import java.util.ArrayList;
 import java.util.List;
 
+import ru.vasic2000.Pool.ExplosionPool;
 import ru.vasic2000.sprite.Enemy;
+import ru.vasic2000.sprite.Explosion;
 import ru.vasic2000.sprite.UFO;
 
 public abstract class SpritePool<T extends Sprite> extends Sprite {
@@ -26,7 +28,7 @@ public abstract class SpritePool<T extends Sprite> extends Sprite {
         return object;
     }
 
-    public void updateActiveSprites(float delta, UFO ship) {
+    public void updateActiveSprites(float delta, UFO ship, ExplosionPool explosionPool) {
         double distance, twoHalfMidleSize;
         for (Sprite sprite : activeObjects) {
             if (!sprite.isDestroyed()) {
@@ -36,6 +38,8 @@ public abstract class SpritePool<T extends Sprite> extends Sprite {
                     twoHalfMidleSize = Math.sqrt(sprite.getHalfHeight() * ship.getHalfHeight());
                     if(distance < twoHalfMidleSize) {
                         sprite.destroy();
+                        Explosion explosion = explosionPool.obtain();
+                        explosion.set(0.25f, sprite.pos);
                     }
                 }
                 sprite.update(delta);

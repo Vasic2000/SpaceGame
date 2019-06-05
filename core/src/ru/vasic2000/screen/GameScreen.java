@@ -16,7 +16,6 @@ import ru.vasic2000.Utils.EnemyGenerator;
 import ru.vasic2000.base.BaseScreen;
 import ru.vasic2000.math.Rect;
 import ru.vasic2000.sprite.Background;
-import ru.vasic2000.sprite.Enemy;
 import ru.vasic2000.sprite.Explosion;
 import ru.vasic2000.sprite.Star;
 import ru.vasic2000.sprite.UFO;
@@ -88,9 +87,9 @@ public class GameScreen extends BaseScreen {
         for (Star star : starArray)
             star.update(delta);
         mainShip.update(delta);
-        bulletPool.updateActiveSprites(delta, mainShip);
-        explosionPool.updateActiveSprites(delta, mainShip);
-        enemyPool.updateActiveSprites(delta, mainShip);
+        bulletPool.updateActiveSprites(delta, mainShip,  explosionPool);
+        explosionPool.updateActiveSprites(delta, mainShip,  explosionPool);
+        enemyPool.updateActiveSprites(delta, mainShip,  explosionPool);
         enemyGenerator.generate(delta);
     }
 
@@ -125,7 +124,6 @@ public class GameScreen extends BaseScreen {
         bulletPool.dispose();
         explosionPool.dispose();
         enemyPool.dispose();
-
         laserSound.dispose();
         explosionSound.dispose();
         music.dispose();
