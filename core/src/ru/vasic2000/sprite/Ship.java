@@ -37,9 +37,15 @@ public class Ship extends Sprite {
     @Override
     public void update(float delta) {
         super.update(delta);
-        pos.mulAdd(v, delta);
+//  Вылетаю со скоростью пули, потом своя скорость
+        if(pos.y > worldBounds.getTop() - getHalfHeight())
+            pos.mulAdd(bulletV, delta);
+                else
+            pos.mulAdd(v, delta);
+
         reloadTimer += delta;
-        if (reloadTimer >= reloadInterval) {
+//  Стреляю только когда подошло время и вылез на корпус от верха экрана
+        if ((pos.y < worldBounds.getTop() - getHalfHeight()) && (reloadTimer >= reloadInterval)) {
             reloadTimer = 0f;
             shoot();
         }
