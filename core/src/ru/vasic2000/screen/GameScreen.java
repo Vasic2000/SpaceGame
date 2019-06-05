@@ -12,6 +12,7 @@ import com.badlogic.gdx.math.Vector2;
 import ru.vasic2000.Pool.BulletPool;
 import ru.vasic2000.Pool.EnemyPool;
 import ru.vasic2000.Pool.ExplosionPool;
+import ru.vasic2000.Utils.EnemyGenerator;
 import ru.vasic2000.base.BaseScreen;
 import ru.vasic2000.math.Rect;
 import ru.vasic2000.sprite.Background;
@@ -39,6 +40,8 @@ public class GameScreen extends BaseScreen {
     private Sound explosionSound;
     private Sound bulletSound;
 
+    private EnemyGenerator enemyGenerator;
+
     @Override
     public void show() {
         super.show();
@@ -59,11 +62,12 @@ public class GameScreen extends BaseScreen {
 
         atlas = new TextureAtlas("textures/mainAtlas.tpack");
         explosionPool = new ExplosionPool(atlas, explosionSound);
-        enemyPool = new EnemyPool(bulletPool, bulletSound);
+        enemyPool = new EnemyPool(bulletPool, bulletSound, worldBounds);
         starArray = new Star[STAR_COUNT];
         for (int i = 0; i < STAR_COUNT; i++) {
             starArray[i] = new Star(atlas);
         }
+        enemyGenerator = new EnemyGenerator(worldBounds, enemyPool, atlas);
     }
 
     @Override
@@ -86,6 +90,7 @@ public class GameScreen extends BaseScreen {
         bulletPool.updateActiveSprites(delta);
         explosionPool.updateActiveSprites(delta);
         enemyPool.updateActiveSprites(delta);
+        enemyGenerator.generate(delta);
     }
 
     private void draw() {
