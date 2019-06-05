@@ -1,11 +1,12 @@
 package ru.vasic2000.screen;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Vector2;
 
 import ru.vasic2000.Pool.BulletPool;
 import ru.vasic2000.base.BaseScreen;
@@ -23,19 +24,26 @@ public class GameScreen extends BaseScreen {
     private TextureAtlas atlas, atlas2;
     private Star[] starArray;
 
-    private Texture badLogicTexture;
     private UFO mainShip;
     private BulletPool bulletPool;
+
+    private Music music;
+    private Sound laserSound;
 
     @Override
     public void show() {
         super.show();
+
+        music = Gdx.audio.newMusic(Gdx.files.internal("sound/Butterfly.mp3"));
+        music.setLooping(true);
+        music.play();
+        laserSound = Gdx.audio.newSound(Gdx.files.internal("sound/laser.mp3"));
+
         bg = new Texture("nebo2.jpg");
         background = new Background(new TextureRegion(bg));
-        badLogicTexture = new Texture("ship.png");
         atlas2 = new TextureAtlas("textures/ufo.pack.pack");
         bulletPool = new BulletPool();
-        mainShip = new UFO(atlas2, bulletPool);
+        mainShip = new UFO(atlas2, bulletPool, laserSound);
         atlas = new TextureAtlas("textures/mainAtlas.tpack");
         starArray = new Star[STAR_COUNT];
         for (int i = 0; i < STAR_COUNT; i++) {
@@ -84,41 +92,12 @@ public class GameScreen extends BaseScreen {
     }
 
     @Override
-    public boolean keyDown(int keycode) {
-        mainShip.keyDown(keycode);
-        return super.keyDown(keycode);
-    }
-
-    @Override
-    public boolean keyUp(int keycode) {
-        mainShip.keyUp(keycode);
-        return super.keyUp(keycode);
-    }
-
-    @Override
-    public boolean keyTyped(char character) {
-        super.keyTyped(character);
-        return false;
-    }
-
-    @Override
     public void dispose() {
         bg.dispose();
         atlas.dispose();
-        badLogicTexture.dispose();
         bulletPool.dispose();
+        laserSound.dispose();
+        music.dispose();
         super.dispose();
-    }
-
-    @Override
-    public boolean touchDown(Vector2 touch, int pointer) {
-        mainShip.touchDown(touch, pointer);
-        return false;
-    }
-
-    @Override
-    public boolean touchUp(Vector2 touch, int pointer) {
-        mainShip.touchUp(touch, pointer);
-        return super.touchUp(touch, pointer);
     }
 }

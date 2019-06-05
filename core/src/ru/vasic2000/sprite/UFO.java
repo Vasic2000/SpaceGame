@@ -5,27 +5,14 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
 import ru.vasic2000.Pool.BulletPool;
-import ru.vasic2000.base.Sprite;
 import ru.vasic2000.math.Rect;
 
-public class UFO extends Sprite {
+public class UFO extends Ship {
 
     private static final int INVALID_POINTER = -1;
-    private int frequencyOfBullets;
-
-    private BulletPool bulletPool;
-    private TextureRegion bulletRegion;
-
-    private Vector2 v;
-    private final Vector2 v0;
-    private Vector2 bulletV;
-    private Vector2 bulletPos;
-
-    private Rect worldBounds;
 
     private boolean pressedLeft;
     private boolean pressedRight;
@@ -33,12 +20,7 @@ public class UFO extends Sprite {
     private int leftPointer = INVALID_POINTER;
     private int rightPointer = INVALID_POINTER;
 
-    Sound lazer;
-
-    //Счётчик кадров до выстрела
-    int ii = 0;
-
-    public UFO(TextureAtlas atlas, BulletPool bulletPool) {
+    public UFO(TextureAtlas atlas, BulletPool bulletPool, Sound bulletSound) {
         super(atlas.findRegion("ship"), 1, 1, 1);
         regions[frame].getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         this.bulletPool = bulletPool;
@@ -46,15 +28,15 @@ public class UFO extends Sprite {
         v = new Vector2();
         v0 = new Vector2(0.5f, 0);
         bulletV = new Vector2(0, 0.5f);
-        bulletPos = new Vector2();
-        lazer = Gdx.audio.newSound(Gdx.files.internal("sound/laser.mp3"));
+        this.reloadInterval = 0.2f;
+        this.bulletHeight = 0.01f;
+        this.damage = 1;
+        this.bulletSound = bulletSound;
     }
 
     @Override
     public void update(float delta) {
-        ii++;
         super.update(delta);
-        pos.mulAdd(v, delta);
         if (getRight() > worldBounds.getRight()) {
             setRight(worldBounds.getRight());
             stop();
@@ -62,19 +44,11 @@ public class UFO extends Sprite {
             setLeft(worldBounds.getLeft());
             stop();
         }
-        if(ii > frequencyOfBullets) {
-            shoot();
-            ii = 0;
-        }
     }
 
     @Override
-    public void resize(Rect wordBounds) {
-        this.worldBounds = wordBounds;
-//        int high = Gdx.graphics.getHeight();
-//        float fps = Gdx.graphics.getDeltaTime();
-//        frequencyOfBullets = Math.round(fps * high);
-        frequencyOfBullets = 25;
+    public void resize(Rect worldBounds) {
+        super.resize(worldBounds);
         setHeightProportion(0.05f);
         setBottom(worldBounds.getBottom() + 0.05f);
     }
@@ -118,7 +92,6 @@ public class UFO extends Sprite {
     }
 
     public boolean keyDown(int keycode) {
-        ii++;
         switch (keycode) {
             case Input.Keys.ESCAPE:
                 Gdx.app.exit();
@@ -132,10 +105,6 @@ public class UFO extends Sprite {
             case Input.Keys.RIGHT:
                 pressedRight = true;
                 moveRight();
-                break;
-            case Input.Keys.UP:
-            case Input.Keys.W:
-                shoot();
                 break;
         }
         return false;
@@ -176,17 +145,5 @@ public class UFO extends Sprite {
 
     private void stop() {
         v.setZero();
-    }
-
-    private void shoot() {
-        Bullet bullet1 = bulletPool.obtain();
-        Bullet bullet2 = bulletPool.obtain();
-        bulletPos.set(pos);
-        bulletPos.x += 0.035f;
-        bulletPos.y += getHalfHeight() - 0.035f;
-        bullet1.set(this, bulletRegion, bulletPos, bulletV, 0.01f, worldBounds, 1);
-        bulletPos.x -= 0.07f;
-        bullet2.set(this, bulletRegion, bulletPos, bulletV, 0.01f, worldBounds, 1);
-        lazer.play();
     }
 }
