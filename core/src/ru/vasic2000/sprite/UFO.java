@@ -32,6 +32,7 @@ public class UFO extends Ship {
         this.bulletHeight = 0.01f;
         this.damage = 1;
         this.bulletSound = bulletSound;
+        this.hp = 100;
     }
 
     @Override
