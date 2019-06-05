@@ -39,7 +39,7 @@ public abstract class SpritePool<T extends Sprite> extends Sprite {
                     if(distance < twoHalfMidleSize) {
                         sprite.destroy();
                         Explosion explosion = explosionPool.obtain();
-                        explosion.set(0.25f, sprite.pos);
+                        explosion.set(2 * sprite.getWidth(), sprite.pos);
                     }
                 }
                 sprite.update(delta);

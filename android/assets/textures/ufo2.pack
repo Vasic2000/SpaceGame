@@ -1,0 +1,19 @@
+
+ufo2.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+ship2
+  rotate: false
+  xy: 1, 23
+  size: 400, 101
+  orig: 400, 101
+  offset: 0, 0
+  index: -1
+Laser
+  rotate: false
+  xy: 1, 1
+  size: 10, 20
+  orig: 10, 20
+  offset: 0, 0
+  index: -1

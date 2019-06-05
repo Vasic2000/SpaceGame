@@ -55,7 +55,7 @@ public class GameScreen extends BaseScreen {
 
         bg = new Texture("nebo2.jpg");
         background = new Background(new TextureRegion(bg));
-        atlas2 = new TextureAtlas("textures/ufo.pack.pack");
+        atlas2 = new TextureAtlas("textures/ufo2.pack");
 
         bulletPool = new BulletPool();
         mainShip = new UFO(atlas2, bulletPool, laserSound);
