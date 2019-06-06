@@ -39,11 +39,6 @@ public abstract class BaseScreen implements Screen, InputProcessor {
         this.glBounds = new Rect(0, 0, 1f, 1f);
         this.worldToGl = new Matrix4();
         this.screenToWorld = new Matrix3();
-
-        this.touchNew = new Vector2();
-        this.v = new Vector2();
-
-        this.speed = 0.007f;
     }
 
     @Override
@@ -85,6 +80,7 @@ public abstract class BaseScreen implements Screen, InputProcessor {
     @Override
     public void hide() {
         System.out.println("hide");
+        dispose();
     }
 
     @Override
@@ -116,10 +112,6 @@ public abstract class BaseScreen implements Screen, InputProcessor {
         System.out.println("touchDown screenX = " + screenX + " screenY = " + screenY);
         touch.set(screenX, screenBounds.getHeight() - screenY).mul(screenToWorld);
         touchDown(touch, pointer);
-        touchNew.set(touch);
-        touch.sub(glBounds.pos);
-        touch.nor();
-        v.set(touch).scl(speed);
         return false;
     }
 

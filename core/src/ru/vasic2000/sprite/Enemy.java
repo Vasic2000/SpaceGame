@@ -9,11 +9,12 @@ import ru.vasic2000.Pool.ExplosionPool;
 import ru.vasic2000.math.Rect;
 
 public class Enemy extends Ship {
-    private enum State { DESCENT, FIGHT }
+    private enum State {DESCENT, FIGHT}
     private State state;
     private Vector2 descentV = new Vector2(0, -0.15f);
+    private UFO mainShip;
 
-    public Enemy(BulletPool bulletPool, ExplosionPool explosionPool, Sound bulletSound, Rect worldBounds) {
+    public Enemy(BulletPool bulletPool, ExplosionPool explosionPool, Sound bulletSound, Rect worldBounds, UFO mainShip) {
         this.bulletPool = bulletPool;
         this.explosionPool = explosionPool;
         this.bulletSound = bulletSound;
@@ -21,6 +22,7 @@ public class Enemy extends Ship {
         this.v = new Vector2();
         this.v0 = new Vector2();
         this.bulletV = new Vector2();
+        this.mainShip = mainShip;
     }
 
     @Override
@@ -39,8 +41,9 @@ public class Enemy extends Ship {
                     reloadTimer = 0f;
                     shoot();
                 }
-                if (getBottom() < worldBounds.getBottom()) {
+                if (getTop() < worldBounds.getBottom()) {
                     destroy();
+                    mainShip.damage(damage);
                 }
                 break;
         }
