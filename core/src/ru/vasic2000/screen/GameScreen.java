@@ -133,9 +133,8 @@ public class GameScreen extends BaseScreen {
             enemyPool.updateActiveSprites(delta);
             enemyGenerator.generate(delta);
         } else if (state == State.RESTART) {
-            bulletPool.clearObjects();
-            enemyPool.clearObjects();
-            explosionPool.clearObjects();
+            bulletPool.dispose();
+            enemyPool.dispose();
             music.play();
             mainShip.setDestroyed(false);
             mainShip.setHp(15);
