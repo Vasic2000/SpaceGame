@@ -25,6 +25,11 @@ public class Ship extends Sprite {
     protected float reloadTimer;
 
     protected int damage;
+
+    public void setHp(int hp) {
+        this.hp = hp;
+    }
+
     protected int hp;
 
     protected Sound bulletSound;

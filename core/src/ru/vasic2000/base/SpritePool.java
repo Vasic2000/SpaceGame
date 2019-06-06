@@ -11,6 +11,11 @@ public abstract class SpritePool<T extends Sprite> extends Sprite {
 
     protected abstract T newObject();
 
+    public void clearObjects() {
+        for(Sprite sprite : activeObjects)
+            sprite.destroy();
+    }
+
     public T obtain() {
         T object;
         if (freeObjects.isEmpty()) {

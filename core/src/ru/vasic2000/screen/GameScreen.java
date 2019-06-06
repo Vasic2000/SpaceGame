@@ -19,6 +19,8 @@ import ru.vasic2000.base.BaseScreen;
 import ru.vasic2000.math.Rect;
 import ru.vasic2000.sprite.Background;
 import ru.vasic2000.sprite.Bullet;
+import ru.vasic2000.sprite.ButtonExit;
+import ru.vasic2000.sprite.ButtonNewGame;
 import ru.vasic2000.sprite.Enemy;
 import ru.vasic2000.sprite.MessageGameOver;
 import ru.vasic2000.sprite.Star;
@@ -27,12 +29,13 @@ import ru.vasic2000.sprite.UFO;
 
 public class GameScreen extends BaseScreen {
     private static final int STAR_COUNT = 64;
-    private enum State {PLAY, PAUSE, GAME_OVER}
 
+    public static State state;
+    private enum State {PLAY, PAUSE, GAME_OVER, RESTART}
 
     private Texture bg;
     private Background background;
-    private TextureAtlas atlas, atlas2;
+    private TextureAtlas atlas, atlas2, atlas3;
     private Star[] starArray;
 
     private UFO mainShip;
@@ -46,9 +49,11 @@ public class GameScreen extends BaseScreen {
     private Sound explosionSound;
     private Sound bulletSound;
 
-    private State state;
     private EnemyGenerator enemyGenerator;
     private MessageGameOver messageGameOver;
+
+    private ButtonNewGame buttonNewGame;
+    private ButtonExit buttonExit;
 
     @Override
     public void show() {
@@ -68,7 +73,9 @@ public class GameScreen extends BaseScreen {
         bulletPool = new BulletPool();
 
         atlas = new TextureAtlas("textures/mainAtlas.tpack");
+        atlas3 = new TextureAtlas("textures/menuAtlas.tpack");
         explosionPool = new ExplosionPool(atlas, explosionSound);
+
         starArray = new Star[STAR_COUNT];
         for (int i = 0; i < STAR_COUNT; i++) {
             starArray[i] = new Star(atlas);
@@ -78,6 +85,8 @@ public class GameScreen extends BaseScreen {
         enemyGenerator = new EnemyGenerator(worldBounds, enemyPool, atlas);
         state = State.PLAY;
         messageGameOver = new MessageGameOver(atlas);
+        buttonNewGame = new ButtonNewGame(atlas);
+        buttonExit = new ButtonExit(atlas3);
     }
 
     @Override
@@ -123,6 +132,14 @@ public class GameScreen extends BaseScreen {
             bulletPool.updateActiveSprites(delta);
             enemyPool.updateActiveSprites(delta);
             enemyGenerator.generate(delta);
+        } else if (state == State.RESTART) {
+            bulletPool.clearObjects();
+            enemyPool.clearObjects();
+            explosionPool.clearObjects();
+            music.play();
+            mainShip.setDestroyed(false);
+            mainShip.setHp(15);
+            state = State.PLAY;
         }
     }
 
@@ -141,6 +158,7 @@ public class GameScreen extends BaseScreen {
                 enemy.destroy();
                 mainShip.destroy();
                 state = State.GAME_OVER;
+                music.stop();
             }
             for (Bullet bullet : bulletList) {
                 if (bullet.getOwner() != mainShip || bullet.isDestroyed()) {
@@ -161,6 +179,7 @@ public class GameScreen extends BaseScreen {
                 bullet.destroy();
                 if (mainShip.isDestroyed()) {
                     state = State.GAME_OVER;
+                    music.stop();
                 }
             }
         }
@@ -182,6 +201,8 @@ public class GameScreen extends BaseScreen {
             enemyPool.drawActiveSprites(batch);
         } else if (state == State.GAME_OVER) {
             messageGameOver.draw(batch);
+            buttonNewGame.draw(batch);
+            buttonExit.draw(batch);
         }
         batch.end();
     }
@@ -194,6 +215,8 @@ public class GameScreen extends BaseScreen {
             star.resize(worldBounds);
         }
         mainShip.resize(worldBounds);
+        buttonNewGame.resize(worldBounds);
+        buttonExit.resize(worldBounds);
     }
 
     @Override
@@ -227,6 +250,10 @@ public class GameScreen extends BaseScreen {
     public boolean touchDown(Vector2 touch, int pointer) {
         if (state == State.PLAY)
             mainShip.touchDown(touch, pointer);
+        else if (state == State.GAME_OVER) {
+            buttonNewGame.touchDown(touch, pointer);
+            buttonExit.touchDown(touch, pointer);
+        }
         return false;
     }
 
@@ -234,6 +261,15 @@ public class GameScreen extends BaseScreen {
     public boolean touchUp(Vector2 touch, int pointer) {
         if (state == State.PLAY)
             mainShip.touchUp(touch, pointer);
+        else if (state == State.GAME_OVER) {
+            buttonNewGame.touchUp(touch, pointer);
+            buttonExit.touchUp(touch, pointer);
+        }
         return false;
     }
+
+    public static void startNewGame() {
+        state = State.RESTART;
+    }
+
 }

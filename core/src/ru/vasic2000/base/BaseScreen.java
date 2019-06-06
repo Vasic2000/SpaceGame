@@ -24,10 +24,6 @@ public abstract class BaseScreen implements Screen, InputProcessor {
     private Matrix4 worldToGl;
     private Matrix3 screenToWorld;
 
-    protected Vector2 touchNew;
-    protected Vector2 v;
-    protected float speed;
-
     @Override
     public void show() {
         System.out.println("show");
