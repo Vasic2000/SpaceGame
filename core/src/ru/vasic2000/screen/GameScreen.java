@@ -9,6 +9,8 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
+import java.util.List;
+
 import ru.vasic2000.Pool.BulletPool;
 import ru.vasic2000.Pool.EnemyPool;
 import ru.vasic2000.Pool.ExplosionPool;
@@ -16,6 +18,7 @@ import ru.vasic2000.Utils.EnemyGenerator;
 import ru.vasic2000.base.BaseScreen;
 import ru.vasic2000.math.Rect;
 import ru.vasic2000.sprite.Background;
+import ru.vasic2000.sprite.Enemy;
 import ru.vasic2000.sprite.Explosion;
 import ru.vasic2000.sprite.Star;
 import ru.vasic2000.sprite.UFO;
@@ -58,21 +61,23 @@ public class GameScreen extends BaseScreen {
         atlas2 = new TextureAtlas("textures/ufo2.pack");
 
         bulletPool = new BulletPool();
-        mainShip = new UFO(atlas2, bulletPool, laserSound);
 
         atlas = new TextureAtlas("textures/mainAtlas.tpack");
         explosionPool = new ExplosionPool(atlas, explosionSound);
-        enemyPool = new EnemyPool(bulletPool, bulletSound, worldBounds);
+        enemyPool = new EnemyPool(bulletPool, explosionPool, bulletSound, worldBounds);
         starArray = new Star[STAR_COUNT];
         for (int i = 0; i < STAR_COUNT; i++) {
             starArray[i] = new Star(atlas);
         }
+        enemyPool = new EnemyPool(bulletPool, explosionPool, bulletSound, worldBounds);
+        mainShip = new UFO(atlas2, bulletPool, explosionPool, laserSound);
         enemyGenerator = new EnemyGenerator(worldBounds, enemyPool, atlas);
     }
 
     @Override
     public void render(float delta) {
         update(delta);
+        checkCollisions();
         freeAllDestroyedActiveObjects();
         draw();
     }
@@ -86,11 +91,30 @@ public class GameScreen extends BaseScreen {
     private void update(float delta) {
         for (Star star : starArray)
             star.update(delta);
-        mainShip.update(delta);
+        if (!mainShip.isDestroyed()) {
+            mainShip.update(delta);
+        }
         bulletPool.updateActiveSprites(delta, mainShip,  explosionPool);
         explosionPool.updateActiveSprites(delta, mainShip,  explosionPool);
         enemyPool.updateActiveSprites(delta, mainShip,  explosionPool);
         enemyGenerator.generate(delta);
+    }
+
+    private void checkCollisions() {
+        if (mainShip.isDestroyed()) {
+            return;
+        }
+        List<Enemy> enemyList = enemyPool.getActiveObjects();
+        for (Enemy enemy : enemyList) {
+            if (enemy.isDestroyed()) {
+                continue;
+            }
+            float minDist = enemy.getHalfWidth() + mainShip.getHalfWidth();
+            if (enemy.pos.dst(mainShip.pos) < minDist) {
+                enemy.destroy();
+                mainShip.destroy();
+            }
+        }
     }
 
     private void draw() {
@@ -100,7 +124,9 @@ public class GameScreen extends BaseScreen {
         background.draw(batch);
         for (Star star : starArray)
             star.draw(batch);
-        mainShip.draw(batch);
+        if (!mainShip.isDestroyed()) {
+            mainShip.draw(batch);
+        }
         bulletPool.drawActiveSprites(batch);
         explosionPool.drawActiveSprites(batch);
         enemyPool.drawActiveSprites(batch);
@@ -144,8 +170,6 @@ public class GameScreen extends BaseScreen {
 
     @Override
     public boolean touchDown(Vector2 touch, int pointer) {
-        Explosion explosion = explosionPool.obtain();
-        explosion.set(0.15f, touch);
         mainShip.touchDown(touch, pointer);
         return false;
     }

@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 
 import ru.vasic2000.Pool.BulletPool;
+import ru.vasic2000.Pool.ExplosionPool;
 import ru.vasic2000.math.Rect;
 
 public class UFO extends Ship {
@@ -20,10 +21,11 @@ public class UFO extends Ship {
     private int leftPointer = INVALID_POINTER;
     private int rightPointer = INVALID_POINTER;
 
-    public UFO(TextureAtlas atlas, BulletPool bulletPool, Sound bulletSound) {
+    public UFO(TextureAtlas atlas, BulletPool bulletPool, ExplosionPool explosionPool, Sound bulletSound) {
         super(atlas.findRegion("ship2"), 1, 2, 2);
         regions[frame].getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         this.bulletPool = bulletPool;
+        this.explosionPool = explosionPool;
         this.bulletRegion = atlas.findRegion("Laser");
         v = new Vector2();
         v0 = new Vector2(0.5f, 0);
@@ -38,6 +40,13 @@ public class UFO extends Ship {
     @Override
     public void update(float delta) {
         super.update(delta);
+
+        reloadTimer += delta;
+        if (reloadTimer >= reloadInterval) {
+            reloadTimer = 0f;
+            shoot();
+        }
+
         if (getRight() > worldBounds.getRight()) {
             setRight(worldBounds.getRight());
             stop();

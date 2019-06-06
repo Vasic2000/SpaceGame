@@ -5,11 +5,13 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
 import ru.vasic2000.Pool.BulletPool;
+import ru.vasic2000.Pool.ExplosionPool;
 import ru.vasic2000.base.Sprite;
 import ru.vasic2000.math.Rect;
 
 public class Ship extends Sprite {
     protected BulletPool bulletPool;
+    protected ExplosionPool explosionPool;
     protected TextureRegion bulletRegion;
 
     protected Vector2 v;
@@ -37,18 +39,7 @@ public class Ship extends Sprite {
     @Override
     public void update(float delta) {
         super.update(delta);
-//  Вылетаю со скоростью пули, потом своя скорость
-        if(pos.y > worldBounds.getTop() - getHalfHeight())
-            pos.mulAdd(bulletV, delta);
-                else
-            pos.mulAdd(v, delta);
-
-        reloadTimer += delta;
-//  Стреляю только когда подошло время и вылез на корпус от верха экрана
-        if ((pos.y < worldBounds.getTop() - getHalfHeight()) && (reloadTimer >= reloadInterval)) {
-            reloadTimer = 0f;
-            shoot();
-        }
+        pos.mulAdd(v, delta);
     }
 
     @Override
@@ -57,9 +48,20 @@ public class Ship extends Sprite {
         this.worldBounds = worldBounds;
     }
 
-    private void shoot() {
+    protected void shoot() {
         bulletSound.play();
         Bullet bullet = bulletPool.obtain();
         bullet.set(this, bulletRegion, pos, bulletV, bulletHeight, worldBounds, damage);
+    }
+
+    @Override
+    public void destroy() {
+        super.destroy();
+        boom();
+    }
+
+    private void boom() {
+        Explosion explosion = explosionPool.obtain();
+        explosion.set(getHeight(), pos);
     }
 }
