@@ -18,8 +18,8 @@ import ru.vasic2000.Utils.EnemyGenerator;
 import ru.vasic2000.base.BaseScreen;
 import ru.vasic2000.math.Rect;
 import ru.vasic2000.sprite.Background;
+import ru.vasic2000.sprite.Bullet;
 import ru.vasic2000.sprite.Enemy;
-import ru.vasic2000.sprite.Explosion;
 import ru.vasic2000.sprite.Star;
 import ru.vasic2000.sprite.UFO;
 
@@ -104,7 +104,10 @@ public class GameScreen extends BaseScreen {
         if (mainShip.isDestroyed()) {
             return;
         }
+
         List<Enemy> enemyList = enemyPool.getActiveObjects();
+        List<Bullet> bulletList = bulletPool.getActiveObjects();
+
         for (Enemy enemy : enemyList) {
             if (enemy.isDestroyed()) {
                 continue;
@@ -113,6 +116,24 @@ public class GameScreen extends BaseScreen {
             if (enemy.pos.dst(mainShip.pos) < minDist) {
                 enemy.destroy();
                 mainShip.destroy();
+            }
+            for (Bullet bullet : bulletList) {
+                if (bullet.getOwner() != mainShip || bullet.isDestroyed()) {
+                    continue;
+                }
+                if (enemy.isBulletCollision(bullet)) {
+                    enemy.damage(bullet.getDamage());
+                    bullet.destroy();
+                }
+            }
+        }
+        for (Bullet bullet : bulletList) {
+            if (bullet.getOwner() == mainShip || bullet.isDestroyed()) {
+                continue;
+            }
+            if (mainShip.isBulletCollision(bullet)) {
+                mainShip.damage(bullet.getDamage());
+                bullet.destroy();
             }
         }
     }
