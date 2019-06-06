@@ -21,7 +21,7 @@ public class UFO extends Ship {
     private int rightPointer = INVALID_POINTER;
 
     public UFO(TextureAtlas atlas, BulletPool bulletPool, Sound bulletSound) {
-        super(atlas.findRegion("ship"), 1, 1, 1);
+        super(atlas.findRegion("ship2"), 1, 2, 2);
         regions[frame].getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         this.bulletPool = bulletPool;
         this.bulletRegion = atlas.findRegion("Laser");
@@ -32,6 +32,7 @@ public class UFO extends Ship {
         this.bulletHeight = 0.01f;
         this.damage = 1;
         this.bulletSound = bulletSound;
+        this.hp = 100;
     }
 
     @Override
@@ -44,6 +45,8 @@ public class UFO extends Ship {
             setLeft(worldBounds.getLeft());
             stop();
         }
+
+
     }
 
     @Override
