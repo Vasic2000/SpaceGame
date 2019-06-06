@@ -40,9 +40,9 @@ public class EnemyGenerator {
     private final TextureRegion[] enemyMediumRegion;
     private final TextureRegion[] enemyBigRegion;
 
-    private final Vector2 enemySmallV = new Vector2(0f, -0.2f);
-    private final Vector2 enemyMediumV = new Vector2(0f, -0.03f);
-    private final Vector2 enemyBigV = new Vector2(0f, -0.005f);
+    private final Vector2 enemySmallV = new Vector2(0f, -0.1f);
+    private final Vector2 enemyMediumV = new Vector2(0f, -0.05f);
+    private final Vector2 enemyBigV = new Vector2(0f, -0.01f);
 
     private TextureRegion bulletRegion;
 

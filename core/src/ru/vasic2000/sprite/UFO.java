@@ -45,6 +45,8 @@ public class UFO extends Ship {
             setLeft(worldBounds.getLeft());
             stop();
         }
+
+
     }
 
     @Override

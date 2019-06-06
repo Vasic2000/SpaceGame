@@ -2,7 +2,6 @@ package ru.vasic2000.Pool;
 
 import com.badlogic.gdx.audio.Sound;
 
-import ru.vasic2000.base.Sprite;
 import ru.vasic2000.base.SpritePool;
 import ru.vasic2000.math.Rect;
 import ru.vasic2000.sprite.Enemy;
