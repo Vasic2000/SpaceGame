@@ -1,0 +1,25 @@
+package ru.vasic2000.sprite;
+
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+
+import ru.vasic2000.base.ScaledTouchUpButton;
+import ru.vasic2000.math.Rect;
+import ru.vasic2000.screen.GameScreen;
+
+public class ButtonNewGame extends ScaledTouchUpButton {
+
+    public ButtonNewGame(TextureAtlas atlas) {
+        super(atlas.findRegion("button_new_game"));
+        setHeightProportion(0.05f);
+    }
+
+    @Override
+    public void resize(Rect worldBounds) {
+        setLeft(worldBounds.getLeft() + 0.03f);
+        setTop(worldBounds.getTop() - 0.03f);
+    }
+    @Override
+    public void action() {
+        GameScreen.startNewGame();
+    }
+}
