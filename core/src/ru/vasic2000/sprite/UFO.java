@@ -14,6 +14,7 @@ import ru.vasic2000.math.Rect;
 public class UFO extends Ship {
 
     private static final int INVALID_POINTER = -1;
+    private static final int HP = 25;
 
     private boolean pressedLeft;
     private boolean pressedRight;
@@ -34,7 +35,7 @@ public class UFO extends Ship {
         this.bulletHeight = 0.01f;
         this.damage = 1;
         this.bulletSound = bulletSound;
-        this.hp = 15;
+        this.hp = HP;
     }
 
     @Override
@@ -54,8 +55,13 @@ public class UFO extends Ship {
             setLeft(worldBounds.getLeft());
             stop();
         }
+    }
 
-
+    public void startNewGame() {
+        this.hp = HP;
+        this.pos.x = worldBounds.pos.x;
+        setDestroyed(false);
+        flushDestroy();
     }
 
     @Override
@@ -154,6 +160,16 @@ public class UFO extends Ship {
                         || bullet.getBottom() > pos.y
                         || bullet.getTop() < getBottom()
         );
+    }
+
+    @Override
+    public void destroy() {
+        super.destroy();
+        pressedLeft = false;
+        pressedRight = false;
+        leftPointer = INVALID_POINTER;
+        rightPointer = INVALID_POINTER;
+        stop();
     }
 
     private void moveRight() {
