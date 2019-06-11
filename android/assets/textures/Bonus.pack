@@ -1,0 +1,26 @@
+
+Bonus.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+AID
+  rotate: false
+  xy: 1, 165
+  size: 100, 80
+  orig: 100, 80
+  offset: 0, 0
+  index: -1
+Death
+  rotate: false
+  xy: 1, 83
+  size: 100, 80
+  orig: 100, 80
+  offset: 0, 0
+  index: -1
+Laser2
+  rotate: false
+  xy: 1, 1
+  size: 100, 80
+  orig: 100, 80
+  offset: 0, 0
+  index: -1
