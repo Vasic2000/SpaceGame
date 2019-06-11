@@ -13,11 +13,34 @@ import ru.vasic2000.math.Rect;
 
 public class UFO extends Ship {
 
+    Vector2 bulletPos;
+
     private static final int INVALID_POINTER = -1;
-    private static final int HP = 25;
+
+    public static int getMaHP() {
+        return maHP;
+    }
+
+    private static final int maHP = 75;
+
+    private static final int HP = 50;
 
     private boolean pressedLeft;
     private boolean pressedRight;
+
+    public void set2laser(boolean is2laser) {
+        this.is2laser = is2laser;
+    }
+
+    private boolean is2laser = false;
+
+    private float is2laserInterval = 10f;
+    private float is2laserTimer;
+
+    public void setIs2laserTimer(float is2laserTimer) {
+        this.is2laserTimer = is2laserTimer;
+    }
+
 
     private int leftPointer = INVALID_POINTER;
     private int rightPointer = INVALID_POINTER;
@@ -43,9 +66,15 @@ public class UFO extends Ship {
         super.update(delta);
 
         reloadTimer += delta;
+        is2laserTimer +=delta;
+
         if (reloadTimer >= reloadInterval) {
             reloadTimer = 0f;
             shoot();
+        }
+
+        if (is2laserTimer >= is2laserInterval) {
+            is2laser = false;
         }
 
         if (getRight() > worldBounds.getRight()) {
@@ -109,6 +138,22 @@ public class UFO extends Ship {
         return false;
     }
 
+    @Override
+    protected void shoot() {
+        bulletPos = new Vector2(pos);
+        if(!is2laser)
+            super.shoot();
+        else {
+            bulletSound.play();
+            Bullet bullet1 = bulletPool.obtain();
+            bulletPos.set(pos.x + getHalfWidth(), pos.y);
+            bullet1.set(this, bulletRegion, bulletPos, bulletV, bulletHeight, worldBounds, damage);
+            Bullet bullet2 = bulletPool.obtain();
+            bulletPos.set(pos.x - getHalfWidth(), pos.y);
+            bullet2.set(this, bulletRegion, bulletPos, bulletV, bulletHeight, worldBounds, damage);
+        }
+    }
+
     public boolean keyDown(int keycode) {
         switch (keycode) {
             case Input.Keys.ESCAPE:
@@ -169,6 +214,7 @@ public class UFO extends Ship {
         pressedRight = false;
         leftPointer = INVALID_POINTER;
         rightPointer = INVALID_POINTER;
+        is2laser = false;
         stop();
     }
 

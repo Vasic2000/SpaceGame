@@ -224,13 +224,18 @@ public class GameScreen extends BaseScreen {
                     case AID:
                         bon.destroy();
                         mainShip.setHp(mainShip.getHp() + 15);
+                        if(mainShip.getHp() > mainShip.getMaHP())
+                            mainShip.setHp(mainShip.getMaHP());
                         break;
                     case DEATH:
                         bon.destroy();
+                        mainShip.setHp(0);
                         mainShip.destroy();
                         break;
                     case Laser2:
                         bon.destroy();
+                        mainShip.set2laser(true);
+                        mainShip.setIs2laserTimer(0f);
                         break;
                 }
                 if (mainShip.isDestroyed()) {
@@ -346,6 +351,7 @@ public class GameScreen extends BaseScreen {
         bulletPool.freeAllActiveObjects();
         explosionPool.freeAllActiveObjects();
         enemyPool.freeAllActiveObjects();
+        bonusPool.freeAllActiveObjects();
         music.play();
     }
 
