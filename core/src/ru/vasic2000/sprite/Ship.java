@@ -75,15 +75,10 @@ public class Ship extends Sprite {
     public void damage(int damage) {
         hp -= damage;
         if (hp <= 0) {
-            hp = 0;
             destroy();
         }
         frame = 1;
         damageAnimateTimer = 0f;
-    }
-
-    public int getHp() {
-        return hp;
     }
 
     private void boom() {

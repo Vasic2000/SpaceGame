@@ -8,23 +8,18 @@ import ru.vasic2000.screen.GameScreen;
 
 public class ButtonNewGame extends ScaledTouchUpButton {
 
-    private GameScreen gameScreen;
-
-    public ButtonNewGame(TextureAtlas atlas, GameScreen gameScreen) {
+    public ButtonNewGame(TextureAtlas atlas) {
         super(atlas.findRegion("button_new_game"));
-        this.gameScreen = gameScreen;
         setHeightProportion(0.05f);
     }
 
     @Override
     public void resize(Rect worldBounds) {
-        super.resize(worldBounds);
-        setHeightProportion(0.05f);
         setLeft(worldBounds.getLeft() + 0.03f);
-        setTop(worldBounds.getTop() - 0.1f);
+        setTop(worldBounds.getTop() - 0.03f);
     }
     @Override
     public void action() {
-        gameScreen.startNewGame();
+        GameScreen.startNewGame();
     }
 }
