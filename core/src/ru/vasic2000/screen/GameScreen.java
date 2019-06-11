@@ -12,6 +12,7 @@ import com.badlogic.gdx.utils.Align;
 
 import java.util.List;
 
+import ru.vasic2000.Pool.BonusPool;
 import ru.vasic2000.Pool.BulletPool;
 import ru.vasic2000.Pool.EnemyPool;
 import ru.vasic2000.Pool.ExplosionPool;
@@ -41,7 +42,7 @@ public class GameScreen extends BaseScreen {
 
     private Texture bg;
     private Background background;
-    private TextureAtlas atlas, atlas2, atlas3;
+    private TextureAtlas atlas, atlas2, atlas3, atlas4;
     private Star[] starArray;
 
     private UFO mainShip;
@@ -49,6 +50,7 @@ public class GameScreen extends BaseScreen {
     private BulletPool bulletPool;
     private ExplosionPool explosionPool;
     private EnemyPool enemyPool;
+    private BonusPool bonusPool;
 
     private Music music;
     private Sound laserSound;
@@ -90,6 +92,7 @@ public class GameScreen extends BaseScreen {
 
         atlas = new TextureAtlas("textures/mainAtlas.tpack");
         atlas3 = new TextureAtlas("textures/menuAtlas.tpack");
+        atlas4 = new TextureAtlas("textures/bonus.tpack");
         explosionPool = new ExplosionPool(atlas, explosionSound);
 
         starArray = new Star[STAR_COUNT];
@@ -98,6 +101,8 @@ public class GameScreen extends BaseScreen {
         }
         mainShip = new UFO(atlas2, bulletPool, explosionPool, laserSound);
         enemyPool = new EnemyPool(bulletPool, explosionPool, bulletSound, worldBounds, mainShip);
+        bonusPool = new BonusPool();
+
         enemyGenerator = new EnemyGenerator(worldBounds, enemyPool, atlas);
         frags = 0;
 
