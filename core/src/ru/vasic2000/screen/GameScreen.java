@@ -16,11 +16,13 @@ import ru.vasic2000.Pool.BonusPool;
 import ru.vasic2000.Pool.BulletPool;
 import ru.vasic2000.Pool.EnemyPool;
 import ru.vasic2000.Pool.ExplosionPool;
+import ru.vasic2000.Utils.BonusGenerator;
 import ru.vasic2000.Utils.EnemyGenerator;
 import ru.vasic2000.base.BaseScreen;
 import ru.vasic2000.base.Font;
 import ru.vasic2000.math.Rect;
 import ru.vasic2000.sprite.Background;
+import ru.vasic2000.sprite.Bonus;
 import ru.vasic2000.sprite.Bullet;
 import ru.vasic2000.sprite.ButtonExit;
 import ru.vasic2000.sprite.ButtonNewGame;
@@ -58,6 +60,7 @@ public class GameScreen extends BaseScreen {
     private Sound bulletSound;
 
     private EnemyGenerator enemyGenerator;
+    private BonusGenerator bonusGenerator;
     private MessageGameOver messageGameOver;
 
     private ButtonNewGame buttonNewGame;
@@ -104,6 +107,7 @@ public class GameScreen extends BaseScreen {
         bonusPool = new BonusPool();
 
         enemyGenerator = new EnemyGenerator(worldBounds, enemyPool, atlas);
+        bonusGenerator = new BonusGenerator(worldBounds, bonusPool, atlas4);
         frags = 0;
 
         sbFrags = new StringBuilder();
@@ -148,6 +152,7 @@ public class GameScreen extends BaseScreen {
         bulletPool.freeAllDestroyedActiveSprites();
         explosionPool.freeAllDestroyedActiveSprites();
         enemyPool.freeAllDestroyedActiveSprites();
+        bonusPool.freeAllDestroyedActiveSprites();
     }
 
     private void update(float delta) {
@@ -158,6 +163,7 @@ public class GameScreen extends BaseScreen {
             mainShip.update(delta);
             bulletPool.updateActiveSprites(delta);
             enemyPool.updateActiveSprites(delta);
+            bonusPool.updateActiveSprites(delta);
             enemyGenerator.generate(delta, frags);
         }
     }
@@ -168,6 +174,9 @@ public class GameScreen extends BaseScreen {
         }
         List<Enemy> enemyList = enemyPool.getActiveObjects();
         List<Bullet> bulletList = bulletPool.getActiveObjects();
+        List<Bonus> bonusList = bonusPool.getActiveObjects();
+
+//        Проверка столкновения НЛО с врагом
         for (Enemy enemy : enemyList) {
             if (enemy.isDestroyed()) {
                 continue;
@@ -179,6 +188,7 @@ public class GameScreen extends BaseScreen {
                 state = State.GAME_OVER;
                 music.stop();
             }
+//            Проверка попадания пули НЛО по врагам
             for (Bullet bullet : bulletList) {
                 if (bullet.getOwner() != mainShip || bullet.isDestroyed()) {
                     continue;
@@ -186,12 +196,14 @@ public class GameScreen extends BaseScreen {
                 if (enemy.isBulletCollision(bullet)) {
                     enemy.damage(bullet.getDamage());
                     if (enemy.isDestroyed()) {
+                        bonusGenerator.generate(enemy.pos);
                         frags++;
                     }
                     bullet.destroy();
                 }
             }
         }
+//        Проверка попадания вражеской пули в НЛО
         for (Bullet bullet : bulletList) {
             if (bullet.getOwner() == mainShip || bullet.isDestroyed()) {
                 continue;
@@ -205,28 +217,52 @@ public class GameScreen extends BaseScreen {
                 }
             }
         }
+//        Проверка поимки НЛО бонуса
+        for (Bonus bon : bonusList) {
+            if (mainShip.isBulletCollision(bon)) {
+                switch (bon.tipe) {
+                    case AID:
+                        bon.destroy();
+                        mainShip.setHp(mainShip.getHp() + 15);
+                        break;
+                    case DEATH:
+                        bon.destroy();
+                        mainShip.destroy();
+                        break;
+                    case Laser2:
+                        bon.destroy();
+                        break;
+                }
+                if (mainShip.isDestroyed()) {
+                    state = State.GAME_OVER;
+                    music.stop();
+                }
+            }
+        }
     }
 
     private void draw() {
         Gdx.gl.glClearColor(0.4f, 0.3f, 0.9f, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
         batch.begin();
+
         background.draw(batch);
         for (Star star : starArray)
             star.draw(batch);
-
         explosionPool.drawActiveSprites(batch);
-
         if (state == State.PLAY) {
             mainShip.draw(batch);
             bulletPool.drawActiveSprites(batch);
             enemyPool.drawActiveSprites(batch);
+            bonusPool.drawActiveSprites(batch);
         } else if (state == State.GAME_OVER) {
             messageGameOver.draw(batch);
             buttonNewGame.draw(batch);
             buttonExit.draw(batch);
         }
         printInfo();
+
         batch.end();
     }
 
@@ -259,6 +295,7 @@ public class GameScreen extends BaseScreen {
         bulletPool.dispose();
         explosionPool.dispose();
         enemyPool.dispose();
+        bonusPool.dispose();
         laserSound.dispose();
         explosionSound.dispose();
         music.dispose();
