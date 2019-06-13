@@ -22,6 +22,7 @@ import ru.vasic2000.base.BaseScreen;
 import ru.vasic2000.base.Font;
 import ru.vasic2000.math.Rect;
 import ru.vasic2000.sprite.Background;
+import ru.vasic2000.sprite.Bonus;
 import ru.vasic2000.sprite.Bullet;
 import ru.vasic2000.sprite.ButtonExit;
 import ru.vasic2000.sprite.ButtonNewGame;
@@ -50,8 +51,8 @@ public class GameScreen extends BaseScreen {
 
     private BulletPool bulletPool;
     private ExplosionPool explosionPool;
-    private BonusPool bonusPool;
     private EnemyPool enemyPool;
+    private BonusPool bonusPool;
 
     private Music music;
     private Sound laserSound;
@@ -76,7 +77,7 @@ public class GameScreen extends BaseScreen {
     public void show() {
         super.show();
 
-        font = new Font("font/font.fnt", "font/font.png");
+        font = new Font("Font/font.fnt", "Font/font.png");
         font.setSize(0.03f);
 
         music = Gdx.audio.newMusic(Gdx.files.internal("sound/Butterfly.mp3"));
@@ -88,29 +89,25 @@ public class GameScreen extends BaseScreen {
 
         bg = new Texture("nebo2.jpg");
         background = new Background(new TextureRegion(bg));
-
-        atlas = new TextureAtlas("textures/mainAtlas.tpack");
         atlas2 = new TextureAtlas("textures/ufo2.pack");
-        atlas3 = new TextureAtlas("textures/menuAtlas.tpack");
-        atlas4 = new TextureAtlas("textures/Bonus.pack");
-
 
         bulletPool = new BulletPool();
-        explosionPool = new ExplosionPool(atlas, explosionSound);
-        mainShip = new UFO(atlas2, bulletPool, explosionPool, laserSound);
-        enemyPool = new EnemyPool(bulletPool, explosionPool, bulletSound, worldBounds, mainShip);
-        bonusPool = new BonusPool(worldBounds, mainShip);
 
+        atlas = new TextureAtlas("textures/mainAtlas.tpack");
+        atlas3 = new TextureAtlas("textures/menuAtlas.tpack");
+        atlas4 = new TextureAtlas("textures/bonus.tpack");
+        explosionPool = new ExplosionPool(atlas, explosionSound);
 
         starArray = new Star[STAR_COUNT];
         for (int i = 0; i < STAR_COUNT; i++) {
             starArray[i] = new Star(atlas);
         }
+        mainShip = new UFO(atlas2, bulletPool, explosionPool, laserSound);
+        enemyPool = new EnemyPool(bulletPool, explosionPool, bulletSound, worldBounds, mainShip);
+        bonusPool = new BonusPool();
 
         enemyGenerator = new EnemyGenerator(worldBounds, enemyPool, atlas);
         bonusGenerator = new BonusGenerator(worldBounds, bonusPool, atlas4);
-
-
         frags = 0;
 
         sbFrags = new StringBuilder();
@@ -177,19 +174,21 @@ public class GameScreen extends BaseScreen {
         }
         List<Enemy> enemyList = enemyPool.getActiveObjects();
         List<Bullet> bulletList = bulletPool.getActiveObjects();
+        List<Bonus> bonusList = bonusPool.getActiveObjects();
+
+//        Проверка столкновения НЛО с врагом
         for (Enemy enemy : enemyList) {
             if (enemy.isDestroyed()) {
                 continue;
             }
             float minDist = enemy.getHalfWidth() + mainShip.getHalfWidth();
-//        Пересечение кораблей
             if (enemy.pos.dst(mainShip.pos) < minDist) {
                 enemy.destroy();
                 mainShip.damage(mainShip.getHp());
                 state = State.GAME_OVER;
                 music.stop();
             }
-//        Пересечение врагов с пулькми НЛО
+//            Проверка попадания пули НЛО по врагам
             for (Bullet bullet : bulletList) {
                 if (bullet.getOwner() != mainShip || bullet.isDestroyed()) {
                     continue;
@@ -204,7 +203,7 @@ public class GameScreen extends BaseScreen {
                 }
             }
         }
-//        Пересечение НЛО с пулями врагов
+//        Проверка попадания вражеской пули в НЛО
         for (Bullet bullet : bulletList) {
             if (bullet.getOwner() == mainShip || bullet.isDestroyed()) {
                 continue;
@@ -218,17 +217,45 @@ public class GameScreen extends BaseScreen {
                 }
             }
         }
+//        Проверка поимки НЛО бонуса
+        for (Bonus bon : bonusList) {
+            if (mainShip.isBulletCollision(bon)) {
+                switch (bon.tipe) {
+                    case AID:
+                        bon.destroy();
+                        mainShip.setHp(mainShip.getHp() + 15);
+                        if(mainShip.getHp() > mainShip.getMaHP())
+                            mainShip.setHp(mainShip.getMaHP());
+                        break;
+                    case DEATH:
+                        bon.destroy();
+                        mainShip.setHp(0);
+                        mainShip.destroy();
+                        break;
+                    case Laser2:
+                        bon.destroy();
+                        mainShip.set2laser(true);
+                        mainShip.setIs2laserTimer(0f);
+                        break;
+                }
+                if (mainShip.isDestroyed()) {
+                    state = State.GAME_OVER;
+                    music.stop();
+                }
+            }
+        }
     }
 
     private void draw() {
         Gdx.gl.glClearColor(0.4f, 0.3f, 0.9f, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
         batch.begin();
+
         background.draw(batch);
         for (Star star : starArray)
             star.draw(batch);
         explosionPool.drawActiveSprites(batch);
-
         if (state == State.PLAY) {
             mainShip.draw(batch);
             bulletPool.drawActiveSprites(batch);
@@ -240,6 +267,7 @@ public class GameScreen extends BaseScreen {
             buttonExit.draw(batch);
         }
         printInfo();
+
         batch.end();
     }
 

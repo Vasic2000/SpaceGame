@@ -13,11 +13,11 @@ public class Font extends BitmapFont {
         getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
     }
 
-    public GlyphLayout draw(Batch batch, CharSequence str, float x, float y, int halign) {
-        return super.draw(batch, str, x, y, 0f, halign, false);
-    }
-
     public void setSize(float size) {
         getData().setScale(size/getCapHeight());
+    }
+
+    public GlyphLayout draw(Batch batch, CharSequence str, float x, float y, int halign) {
+        return super.draw(batch, str, x, y, 0f, halign, false);
     }
 }

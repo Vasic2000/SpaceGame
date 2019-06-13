@@ -5,54 +5,39 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
 import ru.vasic2000.Pool.BonusPool;
-import ru.vasic2000.base.BonusType;
 import ru.vasic2000.math.Rect;
 import ru.vasic2000.sprite.Bonus;
 
 public class BonusGenerator {
-    private static final float AID_HEIGHT = 0.1f;
-    private static final float AID_VY = -0.3f;
-
-    private static final float DEATH_HEIGHT = 0.1f;
-    private static final float DEATH_VY = -0.3f;
-
-    private static final float Laser_2_HEIGHT = 0.1f;
-    private static final float Laser_2_VY = -0.3f;
-
     private Rect worldBounds;
-
-    private final TextureRegion[] aidRegion;
-    private final TextureRegion[] deathRegion;
-    private final TextureRegion[] laser2BigRegion;
-
-    private final Vector2 aidV = new Vector2(0f, -0.05f);
-    private final Vector2 deathV = new Vector2(0f, -0.05f);
-    private final Vector2 laser2V = new Vector2(0f, -0.05f);
-
     private BonusPool bonusPool;
+    private final TextureRegion[] aidRegion;
+    private final TextureRegion[] deathMediumRegion;
+    private final TextureRegion[] laser2Region;
+
+    private final Vector2 bonusV = new Vector2(0f, -0.1f);
 
     public BonusGenerator(Rect worldBounds, BonusPool bonusPool, TextureAtlas atlas) {
-        this.bonusPool = bonusPool;
         this.worldBounds = worldBounds;
-        TextureRegion textureAidRegion = atlas.findRegion("AID");
-        this.aidRegion = Regions.split(textureAidRegion, 1, 1, 1);
-        TextureRegion textureDeathRegion = atlas.findRegion("Death");
-        this.deathRegion = Regions.split(textureDeathRegion, 1, 1, 1);
-        TextureRegion textureLaser2BigRegion = atlas.findRegion("Laser2");
-        this.laser2BigRegion = Regions.split(textureLaser2BigRegion, 1, 1, 1);
+        this.bonusPool = bonusPool;
+        TextureRegion textureRegion0 = atlas.findRegion("AID");
+        this.aidRegion = Regions.split(textureRegion0, 1, 1, 1);
+        TextureRegion textureRegion1 = atlas.findRegion("DEATH");
+        this.deathMediumRegion = Regions.split(textureRegion1, 1, 1, 1);
+        TextureRegion textureRegion2 = atlas.findRegion("LASER2");
+        this.laser2Region = Regions.split(textureRegion2, 1, 1, 1);
     }
 
-    public void generate(Vector2 pos1) {
-            Bonus bonus = bonusPool.obtain();
-
-//            float type = (float) Math.random();
-            bonus.set(aidRegion, pos1, BonusType.AID);
-//            if (type < 0.5f) {
-//                bonus.set(aidRegion, pos1, BonusType.AID);
-//            } else if (type < 0.8f) {
-//                bonus.set(deathRegion, pos1, BonusType.DEATH);
-//            } else {
-//                bonus.set(laser2BigRegion, pos1, BonusType.LASER2);
-//            }
+    public void generate(Vector2 pos) {
+        float type = (float) Math.random();
+        Bonus bonus = bonusPool.obtain();;
+        if (type > 0.85f)
+            bonus.set(laser2Region,  pos, bonusV, worldBounds, Bonus.Tipe.Laser2);
+        else if (type > 0.7f)
+            bonus.set(deathMediumRegion,  pos, bonusV, worldBounds, Bonus.Tipe.DEATH);
+        else if (type > 0.45f)
+            bonus.set(aidRegion,  pos, bonusV, worldBounds, Bonus.Tipe.AID);
+        else bonus.destroy();
     }
+
 }
